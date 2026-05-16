@@ -27,7 +27,13 @@
         .active-filter {
             background-color: #e11d48 !important;
             color: white !important;
-            border-color: #e11d48 !important;
+        }
+        .social-icon {
+            transition: all 0.3s ease;
+        }
+        .social-icon:hover {
+            transform: scale(1.2);
+            color: #e11d48;
         }
     </style>
 </head>
@@ -62,8 +68,7 @@
             <p class="text-2xl md:text-3xl mb-10 max-w-2xl mx-auto">
                 Brincos, colares, pulseiras e chapéus feitos à mão com miçangas e muito amor.
             </p>
-            <a href="#loja" 
-               class="inline-block bg-rose-600 hover:bg-rose-700 text-white text-xl px-12 py-5 rounded-full font-medium transition">
+            <a href="#loja" class="inline-block bg-rose-600 hover:bg-rose-700 text-white text-xl px-12 py-5 rounded-full font-medium transition">
                 Ver a Coleção
             </a>
         </div>
@@ -76,7 +81,6 @@
                 <h2 class="text-5xl font-bold">Nossa Coleção</h2>
             </div>
 
-            <!-- FILTROS -->
             <div class="flex flex-wrap justify-center gap-4 mb-12">
                 <button onclick="filterCategory('all')" id="btn-all" class="active-filter px-8 py-3 rounded-full border font-medium">Todos</button>
                 <button onclick="filterCategory('brincos')" id="btn-brincos" class="px-8 py-3 rounded-full border font-medium">Brincos</button>
@@ -85,9 +89,7 @@
                 <button onclick="filterCategory('chapeus')" id="btn-chapeus" class="px-8 py-3 rounded-full border font-medium">Chapéus</button>
             </div>
 
-            <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-                <!-- Produtos aparecem aqui -->
-            </div>
+            <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"></div>
         </div>
     </section>
 
@@ -97,27 +99,36 @@
             <div class="grid md:grid-cols-2 gap-16 items-center">
                 <div>
                     <h2 class="text-5xl font-bold mb-8">Sobre a Zamirazzo</h2>
-                    <p class="text-lg text-zinc-600 leading-relaxed">
-                        Olá! Eu sou a criadora da Zamirazzo. Transformo miçangas em peças cheias de cor, energia e personalidade.
-                    </p>
-                    <p class="text-lg text-zinc-600 leading-relaxed mt-6">
-                        Cada peça é feita com muito amor. Aceito encomendas personalizadas.
-                    </p>
+                    <p class="text-lg text-zinc-600 leading-relaxed">Olá! Eu sou a criadora da Zamirazzo.</p>
+                    <p class="text-lg text-zinc-600 leading-relaxed mt-4">Transformo miçangas em peças únicas com muito carinho e amor.</p>
                 </div>
                 <img src="img/sobre.jpg" alt="Criadora" class="rounded-3xl shadow-2xl">
             </div>
         </div>
     </section>
 
-    <!-- CONTATO -->
-    <section id="contato" class="bg-zinc-900 text-white py-24">
+    <!-- CONTATO + REDES SOCIAIS -->
+    <section id="contato" class="bg-zinc-900 text-white py-20">
         <div class="max-w-7xl mx-auto px-6 text-center">
             <h2 class="text-5xl font-bold mb-8">Vamos Conversar?</h2>
-            <a href="https://wa.me/5541999999999" target="_blank"
-               class="inline-flex items-center gap-5 bg-green-500 hover:bg-green-600 px-16 py-8 rounded-3xl text-2xl transition">
-                <i class="fab fa-whatsapp text-6xl"></i>
-                <div>Falar no WhatsApp</div>
-            </a>
+            
+            <!-- Ícones de Redes Sociais -->
+            <div class="flex justify-center gap-8 mt-12">
+                <a href="https://wa.me/5541999999999" target="_blank" class="social-icon text-5xl hover:text-green-400">
+                    <i class="fab fa-whatsapp"></i>
+                </a>
+                <a href="https://instagram.com/zamirazzo" target="_blank" class="social-icon text-5xl hover:text-pink-500">
+                    <i class="fab fa-instagram"></i>
+                </a>
+                <!-- Adicione mais se quiser -->
+                <!-- 
+                <a href="#" class="social-icon text-5xl hover:text-blue-500">
+                    <i class="fab fa-facebook"></i>
+                </a>
+                -->
+            </div>
+
+            <p class="mt-8 text-zinc-400">Siga no Instagram e conheça mais peças!</p>
         </div>
     </section>
 
@@ -131,7 +142,7 @@
             { name: "Colar Longo Boho", category: "colares", price: "R$ 85,00", image: "img/colar1.jpg", description: "Colar longo com miçangas" },
             { name: "Pulseira Ajustável", category: "pulseiras", price: "R$ 35,00", image: "img/pulseira1.jpg", description: "Pulseira delicada" },
             { name: "Chapéu Decorado Boho", category: "chapeus", price: "R$ 120,00", image: "img/chapeu1.jpeg", description: "Chapéu com detalhes" },
-            { name: "Chapéu Miçanga Floral", category: "chapeus", price: "R$ 135,00", image: "img/chapeu2.jpeg", description: "Modelo floral exclusivo" },
+            { name: "Chapéu Miçanga Floral", category: "chapeus", price: "R$ 135,00", image: "img/chapeu2.jpeg", description: "Modelo floral" },
             { name: "Brinco Argola Miçanga", category: "brincos", price: "R$ 55,00", image: "img/brinco2.jpg", description: "Argolas modernas" }
         ];
 
@@ -158,22 +169,13 @@
         function renderProducts(filteredProducts) {
             const container = document.getElementById('products-grid');
             container.innerHTML = '';
-            filteredProducts.forEach(product => {
-                container.appendChild(createProductCard(product));
-            });
+            filteredProducts.forEach(product => container.appendChild(createProductCard(product)));
         }
 
-        // === FUNÇÃO DE FILTRO CORRIGIDA ===
         function filterCategory(category) {
-            // Remove active de todos os botões
-            document.querySelectorAll('#loja button').forEach(btn => {
-                btn.classList.remove('active-filter');
-            });
-
-            // Ativa o botão clicado
+            document.querySelectorAll('#loja button').forEach(btn => btn.classList.remove('active-filter'));
             document.getElementById('btn-' + category).classList.add('active-filter');
 
-            // Filtra os produtos
             if (category === 'all') {
                 renderProducts(products);
             } else {
@@ -182,12 +184,11 @@
             }
         }
 
-        function contactWhatsApp(productName) {
-            const message = encodeURIComponent(`Olá! Fiquei interessada no "${productName}" da Zamirazzo. Pode me dar mais informações?`);
-            window.open(`https://wa.me/5541999999999?text=${message}`, '_blank');
+        function contactWhatsApp(name) {
+            const msg = encodeURIComponent(`Olá! Fiquei interessada no "${name}". Pode me dar mais informações?`);
+            window.open(`https://wa.me/5541999999999?text=${msg}`, '_blank');
         }
 
-        // Carrega todos os produtos ao abrir a página
         document.addEventListener('DOMContentLoaded', () => {
             renderProducts(products);
         });
