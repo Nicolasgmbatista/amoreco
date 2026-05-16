@@ -8,36 +8,28 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
     
     <style>
-        body { 
-            font-family: 'Segoe UI', system-ui, sans-serif;
-        }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; }
         .hero-bg {
-            background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)), 
-                        url('img/banner.jpeg') center/cover no-repeat;
+            background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)), url('img/banner.jpeg') center/cover;
             height: 100vh;
         }
-        .section {
+        .page {
             display: none;
         }
-        .section.active {
+        .page.active {
             display: block;
-        }
-        .nav-link {
-            transition: all 0.3s;
         }
         .product-card {
             transition: all 0.4s ease;
         }
         .product-card:hover {
             transform: translateY(-12px);
+            box-shadow: 0 20px 30px -10px rgb(0 0 0 / 0.15);
         }
         .active-filter {
             background-color: #9f1239;
             color: white;
             border-color: #9f1239;
-        }
-        .artisanal-bg {
-            background-color: #fdf4f0;
         }
     </style>
 </head>
@@ -45,37 +37,34 @@
 
     <!-- HEADER -->
     <header class="bg-white shadow-md sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-6 py-6">
-            <div class="flex justify-between items-center">
-                <h1 class="text-4xl font-bold text-rose-700">Zamirazzo</h1>
-                
-                <!-- Menu Centralizado -->
-                <nav class="flex gap-10 text-lg font-medium">
-                    <a href="#" onclick="showSection('inicio')" class="nav-link hover:text-rose-600">Início</a>
-                    <a href="#" onclick="showSection('loja')" class="nav-link hover:text-rose-600">Loja</a>
-                    <a href="#" onclick="showSection('sobre')" class="nav-link hover:text-rose-600">Sobre</a>
-                    <a href="#" onclick="showSection('contato')" class="nav-link hover:text-rose-600">Contato</a>
-                </nav>
-            </div>
+        <div class="max-w-7xl mx-auto px-6 py-6 flex justify-between items-center">
+            <h1 class="text-4xl font-bold text-rose-700">Zamirazzo</h1>
+            
+            <nav class="flex gap-10 text-lg font-medium">
+                <a href="#" onclick="showPage('inicio')" class="hover:text-rose-600">Início</a>
+                <a href="#" onclick="showPage('loja')" class="hover:text-rose-600">Loja</a>
+                <a href="#" onclick="showPage('sobre')" class="hover:text-rose-600">Sobre</a>
+                <a href="#" onclick="showPage('contato')" class="hover:text-rose-600">Contato</a>
+            </nav>
         </div>
     </header>
 
-    <!-- INÍCIO (Banner) -->
-    <section id="inicio" class="section active hero-bg flex items-center text-white">
+    <!-- INÍCIO -->
+    <div id="inicio" class="page active hero-bg flex items-center text-white">
         <div class="max-w-7xl mx-auto px-6 text-center">
             <h2 class="text-6xl md:text-7xl font-bold mb-6">Artesanal.<br>Único.<br>Seu.</h2>
             <p class="text-2xl md:text-3xl mb-10 max-w-2xl mx-auto">
                 Brincos, colares, pulseiras e chapéus feitos à mão com miçangas e muito amor.
             </p>
-            <button onclick="showSection('loja')" 
-                    class="bg-rose-700 hover:bg-rose-800 text-white text-xl px-12 py-5 rounded-full font-medium">
+            <button onclick="showPage('loja')" 
+                    class="bg-rose-700 hover:bg-rose-800 text-white text-xl px-14 py-5 rounded-full font-medium">
                 Ver a Coleção
             </button>
         </div>
-    </section>
+    </div>
 
     <!-- LOJA -->
-    <section id="loja" class="section artisanal-bg">
+    <div id="loja" class="page">
         <div class="max-w-7xl mx-auto px-6 py-16">
             <h2 class="text-5xl font-bold text-center mb-12 text-rose-800">Nossa Coleção</h2>
             
@@ -89,29 +78,33 @@
 
             <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"></div>
         </div>
-    </section>
+    </div>
 
     <!-- SOBRE -->
-    <section id="sobre" class="section bg-white">
-        <div class="max-w-5xl mx-auto px-6 py-16">
+    <div id="sobre" class="page bg-white">
+        <div class="max-w-5xl mx-auto px-6 py-20">
             <div class="grid md:grid-cols-2 gap-16 items-center">
                 <div>
                     <h2 class="text-5xl font-bold mb-8 text-rose-800">Sobre a Zamirazzo</h2>
                     <p class="text-lg text-zinc-600 leading-relaxed">
-                        Cada peça é feita com carinho, miçanga por miçanga. 
-                        Busco transformar pequenos detalhes em acessórios cheios de alma e personalidade.
+                        Olá! Eu sou a criadora da Zamirazzo.<br>
+                        Transformo miçangas em peças únicas, cheias de cor e personalidade.
+                    </p>
+                    <p class="text-lg text-zinc-600 leading-relaxed mt-6">
+                        Cada acessório é feito com muito amor e atenção aos detalhes. 
+                        Também faço peças personalizadas.
                     </p>
                 </div>
-                <img src="img/sobre.jpg" alt="Criadora" class="rounded-3xl shadow-xl">
+                <img src="img/sobre.jpg" alt="Criadora" class="rounded-3xl shadow-2xl">
             </div>
         </div>
-    </section>
+    </div>
 
     <!-- CONTATO -->
-    <section id="contato" class="section bg-[#f5e6d3]">
-        <div class="max-w-7xl mx-auto px-6 py-20 text-center">
+    <div id="contato" class="page bg-[#f8e9d8]">
+        <div class="max-w-7xl mx-auto px-6 py-24 text-center">
             <h2 class="text-5xl font-bold mb-6 text-rose-800">Ficou interessado?</h2>
-            <p class="text-xl text-zinc-700 mb-12">Clique abaixo e vamos conversar sobre sua peça dos sonhos.</p>
+            <p class="text-xl text-zinc-700 mb-12">Clique abaixo e vamos conversar sobre sua peça ideal.</p>
             
             <div class="flex justify-center gap-16">
                 <a href="https://wa.me/5549998109578" target="_blank" class="flex flex-col items-center hover:scale-110 transition">
@@ -124,14 +117,14 @@
                 </a>
             </div>
         </div>
-    </section>
+    </div>
 
     <script>
-        function showSection(sectionId) {
-            document.querySelectorAll('.section').forEach(sec => {
-                sec.classList.remove('active');
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
             });
-            document.getElementById(sectionId).classList.add('active');
+            document.getElementById(pageId).classList.add('active');
         }
 
         const products = [
@@ -139,12 +132,13 @@
             { name: "Colar Longo Boho", category: "colares", price: "R$ 85,00", image: "img/colar1.jpg", description: "Colar longo com miçangas" },
             { name: "Pulseira Ajustável", category: "pulseiras", price: "R$ 35,00", image: "img/pulseira1.jpg", description: "Pulseira delicada" },
             { name: "Chapéu Decorado Boho", category: "chapeus", price: "R$ 120,00", image: "img/chapeu1.jpeg", description: "Chapéu com detalhes" },
-            { name: "Chapéu Miçanga Floral", category: "chapeus", price: "R$ 135,00", image: "img/chapeu2.jpeg", description: "Modelo floral" }
+            { name: "Chapéu Miçanga Floral", category: "chapeus", price: "R$ 135,00", image: "img/chapeu2.jpeg", description: "Modelo floral" },
+            { name: "Brinco Argola Miçanga", category: "brincos", price: "R$ 55,00", image: "img/brinco2.jpg", description: "Argolas modernas" }
         ];
 
         function createProductCard(product) {
             const card = document.createElement('div');
-            card.className = "product-card bg-white rounded-3xl overflow-hidden border border-rose-100";
+            card.className = "product-card bg-white rounded-3xl overflow-hidden border";
             card.innerHTML = `
                 <div class="h-72 relative">
                     <img src="${product.image}" class="w-full h-full object-cover">
@@ -162,28 +156,35 @@
             return card;
         }
 
-        function renderProducts(filtered) {
+        function renderProducts(filteredProducts) {
             const container = document.getElementById('products-grid');
             container.innerHTML = '';
-            filtered.forEach(p => container.appendChild(createProductCard(p)));
+            filteredProducts.forEach(product => {
+                container.appendChild(createProductCard(product));
+            });
         }
 
-        function filterCategory(cat) {
-            document.querySelectorAll('#loja button').forEach(b => b.classList.remove('active-filter'));
-            document.getElementById('btn-' + cat).classList.add('active-filter');
+        function filterCategory(category) {
+            document.querySelectorAll('#loja button').forEach(btn => btn.classList.remove('active-filter'));
+            document.getElementById('btn-' + category).classList.add('active-filter');
 
-            if (cat === 'all') renderProducts(products);
-            else renderProducts(products.filter(p => p.category === cat));
+            if (category === 'all') {
+                renderProducts(products);
+            } else {
+                const filtered = products.filter(p => p.category === category);
+                renderProducts(filtered);
+            }
         }
 
         function contactWhatsApp(name) {
-            const msg = encodeURIComponent(`Olá! Fiquei interessada no "${name}". Pode me dar mais informações?`);
+            const msg = encodeURIComponent(`Olá! Fiquei interessada no "${name}" da Zamirazzo. Pode me dar mais informações?`);
             window.open(`https://wa.me/5549998109578?text=${msg}`, '_blank');
         }
 
+        // Inicializa
         window.onload = () => {
             renderProducts(products);
-            showSection('inicio');
+            showPage('inicio');
         };
     </script>
 </body>
