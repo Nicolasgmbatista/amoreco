@@ -33,22 +33,21 @@
             transition: all 0.4s ease;
         }
         .product-card:hover {
-            transform: translateY(-8px);
+            transform: translateY(-10px);
         }
 
-        /* Responsivo - 2 colunas no celular */
-        .products-grid {
-            grid-template-columns: repeat(2, 1fr);
+        /* Grid Responsivo */
+        #products-grid {
+            grid-template-columns: repeat(2, 1fr);     /* Celular: 2 colunas */
         }
-
         @media (min-width: 768px) {
-            .products-grid {
-                grid-template-columns: repeat(3, 1fr);
+            #products-grid {
+                grid-template-columns: repeat(3, 1fr);   /* Tablet: 3 colunas */
             }
         }
         @media (min-width: 1024px) {
-            .products-grid {
-                grid-template-columns: repeat(4, 1fr);
+            #products-grid {
+                grid-template-columns: repeat(4, 1fr);   /* Computador: 4 colunas */
             }
         }
     </style>
@@ -58,7 +57,7 @@
     <!-- HEADER -->
     <header class="bg-white shadow-md sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-5 py-5 flex items-center justify-between">
-            <h1 class="text-3xl font-bold text-rose-700">Zamirazzo</h1>
+            <h1 class="text-3xl md:text-4xl font-bold text-rose-700">Zamirazzo</h1>
             
             <nav class="flex gap-5 md:gap-10 text-base md:text-lg font-medium">
                 <a href="#" onclick="showPage('inicio')" class="hover:text-rose-600">Início</a>
@@ -88,15 +87,15 @@
         <div class="max-w-7xl mx-auto px-5 py-12">
             <h2 class="text-4xl md:text-5xl font-bold text-center mb-12 text-rose-800">Nossa Coleção</h2>
             
-            <div class="flex flex-wrap justify-center gap-3 mb-10">
-                <button onclick="filterCategory('all')" id="btn-all" class="active-filter px-6 py-3 rounded-full border font-medium text-sm">Todos</button>
-                <button onclick="filterCategory('brincos')" id="btn-brincos" class="px-6 py-3 rounded-full border font-medium text-sm">Brincos</button>
-                <button onclick="filterCategory('colares')" id="btn-colares" class="px-6 py-3 rounded-full border font-medium text-sm">Colares</button>
-                <button onclick="filterCategory('pulseiras')" id="btn-pulseiras" class="px-6 py-3 rounded-full border font-medium text-sm">Pulseiras</button>
-                <button onclick="filterCategory('chapeus')" id="btn-chapeus" class="px-6 py-3 rounded-full border font-medium text-sm">Chapéus</button>
+            <div class="flex flex-wrap justify-center gap-3 md:gap-4 mb-12">
+                <button onclick="filterCategory('all')" id="btn-all" class="active-filter px-6 py-3 rounded-full border font-medium text-sm md:text-base">Todos</button>
+                <button onclick="filterCategory('brincos')" id="btn-brincos" class="px-6 py-3 rounded-full border font-medium text-sm md:text-base">Brincos</button>
+                <button onclick="filterCategory('colares')" id="btn-colares" class="px-6 py-3 rounded-full border font-medium text-sm md:text-base">Colares</button>
+                <button onclick="filterCategory('pulseiras')" id="btn-pulseiras" class="px-6 py-3 rounded-full border font-medium text-sm md:text-base">Pulseiras</button>
+                <button onclick="filterCategory('chapeus')" id="btn-chapeus" class="px-6 py-3 rounded-full border font-medium text-sm md:text-base">Chapéus</button>
             </div>
 
-            <div id="products-grid" class="products-grid gap-6"></div>
+            <div id="products-grid" class="grid gap-6"></div>
         </div>
     </div>
 
