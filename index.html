@@ -8,46 +8,34 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
     
     <style>
-        body { 
-            font-family: 'Segoe UI', system-ui, sans-serif;
-        }
-        .hero-bg {
+        body { font-family: 'Segoe UI', system-ui, sans-serif; }
+        
+        .hero {
             background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)), url('img/banner.jpeg') center/cover;
             height: 100vh;
-        }
-        .page {
             display: none;
         }
-        .page.active {
+        .hero.active {
+            display: flex;
+        }
+
+        .main-page {
+            display: none;
+            padding-top: 100px;
+        }
+        .main-page.active {
             display: block;
         }
+
         .product-card {
             transition: all 0.4s ease;
         }
         .product-card:hover {
             transform: translateY(-12px);
-            box-shadow: 0 20px 30px -10px rgb(0 0 0 / 0.15);
         }
         .active-filter {
             background-color: #9f1239;
             color: white;
-            border-color: #9f1239;
-        }
-        .nav-link {
-            position: relative;
-        }
-        .nav-link:after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            bottom: -4px;
-            left: 0;
-            background-color: #9f1239;
-            transition: width 0.3s;
-        }
-        .nav-link:hover:after {
-            width: 100%;
         }
     </style>
 </head>
@@ -55,34 +43,34 @@
 
     <!-- HEADER -->
     <header class="bg-white shadow-md sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-6 py-6">
-            <div class="flex justify-center">
-                <nav class="flex gap-10 text-lg font-medium bg-white px-12 py-4 rounded-full shadow-md">
-                    <a href="#" onclick="showPage('inicio')" class="nav-link hover:text-rose-700">Início</a>
-                    <a href="#" onclick="showPage('loja')" class="nav-link hover:text-rose-700">Loja</a>
-                    <a href="#" onclick="showPage('sobre')" class="nav-link hover:text-rose-700">Sobre</a>
-                    <a href="#" onclick="showPage('contato')" class="nav-link hover:text-rose-700">Contato</a>
-                </nav>
-            </div>
+        <div class="max-w-7xl mx-auto px-6 py-6 flex items-center justify-between">
+            <h1 class="text-4xl font-bold text-rose-700">Zamirazzo</h1>
+            
+            <nav class="flex gap-10 text-lg font-medium">
+                <a href="#" onclick="showPage('inicio')" class="hover:text-rose-600">Início</a>
+                <a href="#" onclick="showPage('loja')" class="hover:text-rose-600">Loja</a>
+                <a href="#" onclick="showPage('sobre')" class="hover:text-rose-600">Sobre</a>
+                <a href="#" onclick="showPage('contato')" class="hover:text-rose-600">Contato</a>
+            </nav>
         </div>
     </header>
 
-    <!-- INÍCIO -->
-    <div id="inicio" class="page active hero-bg flex items-center text-white">
+    <!-- ==================== BANNER INICIAL ==================== -->
+    <div id="inicio" class="hero active items-center text-white">
         <div class="max-w-7xl mx-auto px-6 text-center">
             <h2 class="text-6xl md:text-7xl font-bold mb-6">Artesanal.<br>Único.<br>Seu.</h2>
             <p class="text-2xl md:text-3xl mb-10 max-w-2xl mx-auto">
                 Brincos, colares, pulseiras e chapéus feitos à mão com miçangas e muito amor.
             </p>
             <button onclick="showPage('loja')" 
-                    class="bg-rose-700 hover:bg-rose-800 text-white text-xl px-14 py-5 rounded-full font-medium transition">
+                    class="bg-rose-700 hover:bg-rose-800 text-white text-xl px-14 py-5 rounded-full font-medium">
                 Ver a Coleção
             </button>
         </div>
     </div>
 
-    <!-- LOJA -->
-    <div id="loja" class="page">
+    <!-- ==================== LOJA ==================== -->
+    <div id="loja" class="main-page">
         <div class="max-w-7xl mx-auto px-6 py-16">
             <h2 class="text-5xl font-bold text-center mb-12 text-rose-800">Nossa Coleção</h2>
             
@@ -98,8 +86,8 @@
         </div>
     </div>
 
-    <!-- SOBRE -->
-    <div id="sobre" class="page bg-white">
+    <!-- ==================== SOBRE ==================== -->
+    <div id="sobre" class="main-page bg-white">
         <div class="max-w-5xl mx-auto px-6 py-20">
             <div class="grid md:grid-cols-2 gap-16 items-center">
                 <div>
@@ -109,8 +97,7 @@
                         Transformo miçangas em peças cheias de cor, vida e personalidade.
                     </p>
                     <p class="text-lg text-zinc-600 leading-relaxed mt-6">
-                        Cada peça é feita com muito amor e atenção aos detalhes. 
-                        Aceito encomendas personalizadas.
+                        Cada peça é feita com muito amor. Aceito encomendas personalizadas.
                     </p>
                 </div>
                 <img src="img/sobre.jpg" alt="Criadora" class="rounded-3xl shadow-2xl">
@@ -118,11 +105,11 @@
         </div>
     </div>
 
-    <!-- CONTATO -->
-    <div id="contato" class="page bg-[#f8e9d8]">
+    <!-- ==================== CONTATO ==================== -->
+    <div id="contato" class="main-page bg-[#f8e9d8]">
         <div class="max-w-7xl mx-auto px-6 py-24 text-center">
             <h2 class="text-5xl font-bold mb-6 text-rose-800">Ficou interessado?</h2>
-            <p class="text-xl text-zinc-700 mb-12">Clique abaixo e vamos conversar sobre sua peça ideal.</p>
+            <p class="text-xl text-zinc-700 mb-12">Clique abaixo e vamos conversar sobre sua peça dos sonhos.</p>
             
             <div class="flex justify-center gap-16">
                 <a href="https://wa.me/5549998109578" target="_blank" class="flex flex-col items-center hover:scale-110 transition">
@@ -139,10 +126,15 @@
 
     <script>
         function showPage(pageId) {
-            document.querySelectorAll('.page').forEach(page => {
-                page.classList.remove('active');
+            document.querySelectorAll('.hero, .main-page').forEach(el => {
+                el.classList.remove('active');
             });
-            document.getElementById(pageId).classList.add('active');
+
+            if (pageId === 'inicio') {
+                document.getElementById('inicio').classList.add('active');
+            } else {
+                document.getElementById(pageId).classList.add('active');
+            }
         }
 
         const products = [
@@ -150,8 +142,7 @@
             { name: "Colar Longo Boho", category: "colares", price: "R$ 85,00", image: "img/colar1.jpg", description: "Colar longo com miçangas" },
             { name: "Pulseira Ajustável", category: "pulseiras", price: "R$ 35,00", image: "img/pulseira1.jpg", description: "Pulseira delicada" },
             { name: "Chapéu Decorado Boho", category: "chapeus", price: "R$ 120,00", image: "img/chapeu1.jpeg", description: "Chapéu com detalhes" },
-            { name: "Chapéu Miçanga Floral", category: "chapeus", price: "R$ 135,00", image: "img/chapeu2.jpeg", description: "Modelo floral" },
-            { name: "Brinco Argola Miçanga", category: "brincos", price: "R$ 55,00", image: "img/brinco2.jpg", description: "Argolas modernas" }
+            { name: "Chapéu Miçanga Floral", category: "chapeus", price: "R$ 135,00", image: "img/chapeu2.jpeg", description: "Modelo floral" }
         ];
 
         function createProductCard(product) {
