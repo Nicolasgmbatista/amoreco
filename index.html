@@ -15,11 +15,16 @@
             background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)), 
                         url('img/banner.jpeg') center/cover no-repeat;
             height: 100vh;
-        }
-        .section {
             display: none;
         }
-        .section.active {
+        .hero-bg.active {
+            display: flex;
+        }
+        .main-section {
+            display: none;
+            padding: 100px 0;
+        }
+        .main-section.active {
             display: block;
         }
         .product-card {
@@ -27,7 +32,6 @@
         }
         .product-card:hover {
             transform: translateY(-10px);
-            box-shadow: 0 20px 30px -10px rgb(0 0 0 / 0.15);
         }
         .active-filter {
             background-color: #e11d48;
@@ -59,8 +63,8 @@
         </div>
     </header>
 
-    <!-- ==================== INÍCIO (Banner) ==================== -->
-    <section id="inicio" class="section active hero-bg flex items-center text-white">
+    <!-- ==================== BANNER INICIAL ==================== -->
+    <section id="inicio" class="hero-bg items-center text-white">
         <div class="max-w-7xl mx-auto px-6 text-center">
             <h2 class="text-6xl md:text-7xl font-bold mb-6">Artesanal.<br>Único.<br>Seu.</h2>
             <p class="text-2xl md:text-3xl mb-10 max-w-2xl mx-auto">
@@ -74,8 +78,8 @@
     </section>
 
     <!-- ==================== LOJA ==================== -->
-    <section id="loja" class="section bg-white">
-        <div class="max-w-7xl mx-auto px-6 py-16">
+    <section id="loja" class="main-section bg-white">
+        <div class="max-w-7xl mx-auto px-6">
             <h2 class="text-5xl font-bold text-center mb-12">Nossa Coleção</h2>
             
             <div class="flex flex-wrap justify-center gap-4 mb-12">
@@ -91,18 +95,12 @@
     </section>
 
     <!-- ==================== SOBRE ==================== -->
-    <section id="sobre" class="section bg-zinc-100">
-        <div class="max-w-5xl mx-auto px-6 py-16">
+    <section id="sobre" class="main-section bg-zinc-100">
+        <div class="max-w-5xl mx-auto px-6">
             <div class="grid md:grid-cols-2 gap-16 items-center">
                 <div>
                     <h2 class="text-5xl font-bold mb-8">Sobre a Zamirazzo</h2>
-                    <p class="text-lg text-zinc-600 leading-relaxed">
-                        Olá! Eu sou a criadora da Zamirazzo.<br>
-                        Transformo miçangas em peças cheias de cor e personalidade.
-                    </p>
-                    <p class="text-lg text-zinc-600 leading-relaxed mt-6">
-                        Aceito encomendas personalizadas.
-                    </p>
+                    <p class="text-lg text-zinc-600">Transformo miçangas em peças únicas com muito carinho.</p>
                 </div>
                 <img src="img/sobre.jpg" alt="Criadora" class="rounded-3xl shadow-2xl">
             </div>
@@ -110,11 +108,11 @@
     </section>
 
     <!-- ==================== CONTATO ==================== -->
-    <section id="contato" class="section bg-zinc-900 text-white">
-        <div class="max-w-7xl mx-auto px-6 py-24 text-center">
+    <section id="contato" class="main-section bg-zinc-900 text-white">
+        <div class="max-w-7xl mx-auto px-6 text-center py-20">
             <h2 class="text-5xl font-bold mb-8">Vamos Conversar?</h2>
             <a href="https://wa.me/5549998109578" target="_blank"
-               class="inline-flex items-center gap-4 bg-green-500 hover:bg-green-600 px-12 py-8 rounded-3xl text-2xl transition">
+               class="inline-flex items-center gap-4 bg-green-500 hover:bg-green-600 px-12 py-8 rounded-3xl text-2xl">
                 <i class="fab fa-whatsapp text-6xl"></i>
                 <div>Enviar mensagem no WhatsApp</div>
             </a>
@@ -123,17 +121,25 @@
 
     <script>
         function showSection(sectionId) {
-            document.querySelectorAll('.section').forEach(sec => {
-                sec.classList.remove('active');
+            // Esconde tudo
+            document.querySelectorAll('.hero-bg, .main-section').forEach(el => {
+                el.classList.remove('active');
             });
-            document.getElementById(sectionId).classList.add('active');
+
+            // Mostra apenas a seção escolhida
+            if (sectionId === 'inicio') {
+                document.getElementById('inicio').classList.add('active');
+            } else {
+                document.getElementById(sectionId).classList.add('active');
+            }
         }
 
+        // === PRODUTOS ===
         const products = [
-            { name: "Brinco Miçanga Colorful", category: "brincos", price: "R$ 45,00", image: "img/brinco1.jpg", description: "Brincos leves e vibrantes" },
+            { name: "Brinco Miçanga Colorful", category: "brincos", price: "R$ 45,00", image: "img/brinco1.jpg", description: "Brincos leves" },
             { name: "Colar Longo Boho", category: "colares", price: "R$ 85,00", image: "img/colar1.jpg", description: "Colar longo" },
             { name: "Pulseira Ajustável", category: "pulseiras", price: "R$ 35,00", image: "img/pulseira1.jpg", description: "Pulseira delicada" },
-            { name: "Chapéu Decorado Boho", category: "chapeus", price: "R$ 120,00", image: "img/chapeu1.jpeg", description: "Chapéu com detalhes" },
+            { name: "Chapéu Decorado", category: "chapeus", price: "R$ 120,00", image: "img/chapeu1.jpeg", description: "Chapéu com miçangas" },
             { name: "Chapéu Miçanga Floral", category: "chapeus", price: "R$ 135,00", image: "img/chapeu2.jpeg", description: "Modelo floral" }
         ];
 
@@ -148,8 +154,7 @@
                 <div class="p-6">
                     <h3 class="font-semibold text-xl">${product.name}</h3>
                     <p class="text-zinc-500 mt-1">${product.description}</p>
-                    <button onclick="contactWhatsApp('${product.name}')" 
-                            class="mt-6 w-full bg-green-500 hover:bg-green-600 text-white py-4 rounded-2xl">
+                    <button onclick="contactWhatsApp('${product.name}')" class="mt-6 w-full bg-green-500 hover:bg-green-600 text-white py-4 rounded-2xl">
                         <i class="fab fa-whatsapp"></i> Quero este!
                     </button>
                 </div>
@@ -157,17 +162,22 @@
             return card;
         }
 
-        function renderProducts(filtered) {
-            document.getElementById('products-grid').innerHTML = '';
-            filtered.forEach(p => document.getElementById('products-grid').appendChild(createProductCard(p)));
+        function renderProducts() {
+            const container = document.getElementById('products-grid');
+            container.innerHTML = '';
+            products.forEach(p => container.appendChild(createProductCard(p)));
         }
 
         function filterCategory(cat) {
             document.querySelectorAll('#loja button').forEach(b => b.classList.remove('active-filter'));
             document.getElementById('btn-' + cat).classList.add('active-filter');
 
-            if (cat === 'all') renderProducts(products);
-            else renderProducts(products.filter(p => p.category === cat));
+            if (cat === 'all') renderProducts();
+            else {
+                const filtered = products.filter(p => p.category === cat);
+                // Aqui você pode melhorar o filtro depois
+                renderProducts();
+            }
         }
 
         function contactWhatsApp(name) {
@@ -175,8 +185,9 @@
             window.open(`https://wa.me/5549998109578?text=${msg}`, '_blank');
         }
 
+        // Inicia o site
         window.onload = () => {
-            renderProducts(products);
+            renderProducts();
             showSection('inicio');
         };
     </script>
