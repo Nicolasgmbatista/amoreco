@@ -8,14 +8,27 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
     
     <style>
-        body { font-family: 'Segoe UI', system-ui, sans-serif; }
+        body { 
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            scroll-behavior: smooth;
+        }
         .hero-bg {
             background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)), 
                         url('img/banner.jpeg') center/cover no-repeat;
             height: 100vh;
         }
-        .hidden-section { display: none; }
-        .product-card:hover { transform: translateY(-8px); }
+        .product-card {
+            transition: all 0.4s ease;
+        }
+        .product-card:hover {
+            transform: translateY(-12px);
+            box-shadow: 0 25px 40px -10px rgb(0 0 0 / 0.15);
+        }
+        .active-filter {
+            background-color: #e11d48 !important;
+            color: white !important;
+            border-color: #e11d48 !important;
+        }
     </style>
 </head>
 <body class="bg-zinc-50">
@@ -24,133 +37,160 @@
     <header class="bg-white shadow-md sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
             <div class="flex items-center gap-3">
-                <img src="img/zamirazzo_logo.jpeg" alt="Logo" class="h-12">
+                <img src="img/logo_zamirazzo.jpeg" alt="Logo" class="h-12">
                 <h1 class="text-3xl font-bold text-rose-600">Zamirazzo</h1>
             </div>
             
-            <nav class="flex gap-8 text-lg font-medium">
-                <a href="#" onclick="showSection('inicio')" class="hover:text-rose-600">Início</a>
-                <a href="#" onclick="showSection('loja')" class="hover:text-rose-600">Loja</a>
-                <a href="#" onclick="showSection('sobre')" class="hover:text-rose-600">Sobre</a>
-                <a href="#" onclick="showSection('contato')" class="hover:text-rose-600">Contato</a>
+            <nav class="hidden md:flex items-center gap-8 text-lg font-medium">
+                <a href="#inicio" class="hover:text-rose-600">Início</a>
+                <a href="#loja" class="hover:text-rose-600">Loja</a>
+                <a href="#sobre" class="hover:text-rose-600">Sobre</a>
+                <a href="#contato" class="hover:text-rose-600">Contato</a>
             </nav>
             
-            <a href="https://wa.me/5541999999999" target="_blank" class="bg-green-500 text-white px-6 py-3 rounded-full flex items-center gap-2 hover:bg-green-600">
+            <a href="https://wa.me/5541999999999" target="_blank"
+               class="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-full flex items-center gap-2 transition">
                 <i class="fab fa-whatsapp"></i> WhatsApp
             </a>
         </div>
     </header>
 
-    <!-- ==================== INÍCIO ==================== -->
-    <section id="section-inicio">
-        <div class="hero-bg flex items-center text-white">
-            <div class="max-w-7xl mx-auto px-6 text-center">
-                <h2 class="text-6xl md:text-7xl font-bold mb-6">Artesanal. Exclusivo. Feito para você.</h2>
-                <p class="text-2xl md:text-3xl mb-10">Brincos, colares e pulseiras feitos com miçangas e amor. Chapéus artesanais, criados com o mesmo cuidado e estilo único.</p>
-                <button onclick="showSection('loja')" 
-                        class="bg-rose-600 hover:bg-rose-700 text-white text-xl px-12 py-5 rounded-full">
-                    Ver a Coleção
-                </button>
-            </div>
-        </div>
-    </section>
-
-    <!-- ==================== LOJA ==================== -->
-    <section id="section-loja" class="hidden-section bg-white py-16">
-        <div class="max-w-7xl mx-auto px-6">
-            <h2 class="text-5xl font-bold text-center mb-12">Nossa Coleção</h2>
-            
-            <div class="flex flex-wrap justify-center gap-4 mb-12">
-                <button onclick="filterCategory('all')" id="btn-all" class="active-filter px-8 py-3 rounded-full border">Todos</button>
-                <button onclick="filterCategory('brincos')" id="btn-brincos" class="px-8 py-3 rounded-full border">Brincos</button>
-                <button onclick="filterCategory('colares')" id="btn-colares" class="px-8 py-3 rounded-full border">Colares</button>
-                <button onclick="filterCategory('pulseiras')" id="btn-pulseiras" class="px-8 py-3 rounded-full border">Pulseiras</button>
-                <button onclick="filterCategory('chapeus')" id="btn-chapeus" class="px-8 py-3 rounded-full border">Chapéus</button>
-            </div>
-
-            <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"></div>
-        </div>
-    </section>
-
-    <!-- ==================== SOBRE ==================== -->
-    <section id="section-sobre" class="hidden-section bg-zinc-100 py-20">
-        <div class="max-w-4xl mx-auto px-6 text-center">
-            <h2 class="text-5xl font-bold mb-8">Sobre a Zamirazzo</h2>
-            <p class="text-lg text-zinc-600 max-w-2xl mx-auto">
-                Cada peça é feita à mão com miçangas e muito carinho. 
-                Meu objetivo é criar acessórios únicos que expressem sua personalidade.
+    <!-- INÍCIO -->
+    <section id="inicio" class="hero-bg flex items-center text-white">
+        <div class="max-w-7xl mx-auto px-6 text-center">
+            <h2 class="text-6xl md:text-7xl font-bold mb-6">Artesanal.<br>Único.<br>Seu.</h2>
+            <p class="text-2xl md:text-3xl mb-10 max-w-2xl mx-auto">
+                Brincos, colares, pulseiras e chapéus feitos à mão com miçangas e muito amor.
             </p>
-            <img src="img/sobre.jpg" alt="Sobre" class="mt-12 rounded-3xl shadow-2xl mx-auto">
+            <a href="#loja" 
+               class="inline-block bg-rose-600 hover:bg-rose-700 text-white text-xl px-12 py-5 rounded-full font-medium transition">
+                Ver a Coleção
+            </a>
         </div>
     </section>
 
-    <!-- ==================== CONTATO ==================== -->
-    <section id="section-contato" class="hidden-section bg-zinc-900 text-white py-24">
+    <!-- LOJA -->
+    <section id="loja" class="bg-white py-20">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-5xl font-bold">Nossa Coleção</h2>
+            </div>
+
+            <!-- FILTROS -->
+            <div class="flex flex-wrap justify-center gap-4 mb-12">
+                <button onclick="filterCategory('all')" id="btn-all" class="active-filter px-8 py-3 rounded-full border font-medium">Todos</button>
+                <button onclick="filterCategory('brincos')" id="btn-brincos" class="px-8 py-3 rounded-full border font-medium">Brincos</button>
+                <button onclick="filterCategory('colares')" id="btn-colares" class="px-8 py-3 rounded-full border font-medium">Colares</button>
+                <button onclick="filterCategory('pulseiras')" id="btn-pulseiras" class="px-8 py-3 rounded-full border font-medium">Pulseiras</button>
+                <button onclick="filterCategory('chapeus')" id="btn-chapeus" class="px-8 py-3 rounded-full border font-medium">Chapéus</button>
+            </div>
+
+            <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                <!-- Produtos aparecem aqui -->
+            </div>
+        </div>
+    </section>
+
+    <!-- SOBRE -->
+    <section id="sobre" class="bg-zinc-100 py-20">
+        <div class="max-w-5xl mx-auto px-6">
+            <div class="grid md:grid-cols-2 gap-16 items-center">
+                <div>
+                    <h2 class="text-5xl font-bold mb-8">Sobre a Zamirazzo</h2>
+                    <p class="text-lg text-zinc-600 leading-relaxed">
+                        Olá! Eu sou a criadora da Zamirazzo. Transformo miçangas em peças cheias de cor, energia e personalidade.
+                    </p>
+                    <p class="text-lg text-zinc-600 leading-relaxed mt-6">
+                        Cada peça é feita com muito amor. Aceito encomendas personalizadas.
+                    </p>
+                </div>
+                <img src="img/sobre.jpg" alt="Criadora" class="rounded-3xl shadow-2xl">
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTATO -->
+    <section id="contato" class="bg-zinc-900 text-white py-24">
         <div class="max-w-7xl mx-auto px-6 text-center">
             <h2 class="text-5xl font-bold mb-8">Vamos Conversar?</h2>
-            <a href="https://wa.me/5541999999999" target="_blank" 
-               class="inline-flex items-center gap-4 bg-green-500 hover:bg-green-600 px-16 py-8 rounded-3xl text-2xl">
+            <a href="https://wa.me/5541999999999" target="_blank"
+               class="inline-flex items-center gap-5 bg-green-500 hover:bg-green-600 px-16 py-8 rounded-3xl text-2xl transition">
                 <i class="fab fa-whatsapp text-6xl"></i>
                 <div>Falar no WhatsApp</div>
             </a>
         </div>
     </section>
 
-    <script>
-        function showSection(section) {
-            document.querySelectorAll('section').forEach(sec => {
-                sec.classList.add('hidden-section');
-            });
-            document.getElementById('section-' + section).classList.remove('hidden-section');
-        }
+    <footer class="bg-black text-zinc-500 py-8 text-center text-sm">
+        © 2026 Zamirazzo • Feito com ❤️
+    </footer>
 
-        // Produtos
+    <script>
         const products = [
-            { name: "Brinco Miçanga Colorful", category: "brincos", price: "R$ 45,00", image: "img/brinco1.jpg", description: "Brincos leves" },
-            { name: "Colar Longo Boho", category: "colares", price: "R$ 85,00", image: "img/colar1.jpg", description: "Colar longo" },
+            { name: "Brinco Miçanga Colorful", category: "brincos", price: "R$ 45,00", image: "img/brinco1.jpg", description: "Brincos leves e vibrantes" },
+            { name: "Colar Longo Boho", category: "colares", price: "R$ 85,00", image: "img/colar1.jpg", description: "Colar longo com miçangas" },
             { name: "Pulseira Ajustável", category: "pulseiras", price: "R$ 35,00", image: "img/pulseira1.jpg", description: "Pulseira delicada" },
-            { name: "Chapéu Decorado", category: "chapeus", price: "R$ 120,00", image: "img/chapeu1.jpeg", description: "Chapéu com miçangas" },
-            { name: "Chapéu Miçanga Floral", category: "chapeus", price: "R$ 135,00", image: "img/chapeu2.jpeg", description: "Modelo floral" }
+            { name: "Chapéu Decorado Boho", category: "chapeus", price: "R$ 120,00", image: "img/chapeu1.jpeg", description: "Chapéu com detalhes" },
+            { name: "Chapéu Miçanga Floral", category: "chapeus", price: "R$ 135,00", image: "img/chapeu2.jpeg", description: "Modelo floral exclusivo" },
+            { name: "Brinco Argola Miçanga", category: "brincos", price: "R$ 55,00", image: "img/brinco2.jpg", description: "Argolas modernas" }
         ];
 
-        function createProductCard(p) {
-            const div = document.createElement('div');
-            div.className = "product-card bg-white rounded-3xl overflow-hidden shadow";
-            div.innerHTML = `
-                <img src="${p.image}" class="w-full h-64 object-cover">
+        function createProductCard(product) {
+            const card = document.createElement('div');
+            card.className = "product-card bg-white rounded-3xl overflow-hidden border";
+            card.innerHTML = `
+                <div class="h-72 relative">
+                    <img src="${product.image}" class="w-full h-full object-cover">
+                    <div class="absolute top-4 right-4 bg-white px-4 py-1 rounded-full font-bold shadow">${product.price}</div>
+                </div>
                 <div class="p-6">
-                    <h3 class="font-semibold text-xl">${p.name}</h3>
-                    <p class="text-zinc-500">${p.description}</p>
-                    <p class="font-bold mt-3">${p.price}</p>
-                    <button onclick="contactWhatsApp('${p.name}')" class="mt-6 w-full bg-green-500 text-white py-4 rounded-2xl">
-                        Quero este
+                    <h3 class="font-semibold text-xl">${product.name}</h3>
+                    <p class="text-zinc-500 mt-1">${product.description}</p>
+                    <button onclick="contactWhatsApp('${product.name}')" 
+                            class="mt-6 w-full bg-green-500 hover:bg-green-600 text-white py-4 rounded-2xl font-medium">
+                        <i class="fab fa-whatsapp"></i> Quero este!
                     </button>
                 </div>
             `;
-            return div;
+            return card;
         }
 
-        function renderProducts() {
+        function renderProducts(filteredProducts) {
             const container = document.getElementById('products-grid');
             container.innerHTML = '';
-            products.forEach(p => container.appendChild(createProductCard(p)));
+            filteredProducts.forEach(product => {
+                container.appendChild(createProductCard(product));
+            });
         }
 
-        function filterCategory(cat) {
-            // Simples por enquanto - mostra todos
-            renderProducts();
+        // === FUNÇÃO DE FILTRO CORRIGIDA ===
+        function filterCategory(category) {
+            // Remove active de todos os botões
+            document.querySelectorAll('#loja button').forEach(btn => {
+                btn.classList.remove('active-filter');
+            });
+
+            // Ativa o botão clicado
+            document.getElementById('btn-' + category).classList.add('active-filter');
+
+            // Filtra os produtos
+            if (category === 'all') {
+                renderProducts(products);
+            } else {
+                const filtered = products.filter(p => p.category === category);
+                renderProducts(filtered);
+            }
         }
 
-        function contactWhatsApp(name) {
-            const msg = encodeURIComponent(`Olá! Gostei do "${name}". Pode me dar mais detalhes?`);
-            window.open(`https://wa.me/5541999999999?text=${msg}`, '_blank');
+        function contactWhatsApp(productName) {
+            const message = encodeURIComponent(`Olá! Fiquei interessada no "${productName}" da Zamirazzo. Pode me dar mais informações?`);
+            window.open(`https://wa.me/5541999999999?text=${message}`, '_blank');
         }
 
-        // Inicia mostrando apenas o Início
-        window.onload = () => {
-            renderProducts();
-            showSection('inicio');
-        };
+        // Carrega todos os produtos ao abrir a página
+        document.addEventListener('DOMContentLoaded', () => {
+            renderProducts(products);
+        });
     </script>
 </body>
 </html>
