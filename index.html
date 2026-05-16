@@ -8,7 +8,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
     
     <style>
-        body { font-family: 'Segoe UI', system-ui, sans-serif; }
+        body { 
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
         .hero-bg {
             background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)), url('img/banner.jpeg') center/cover;
             height: 100vh;
@@ -31,21 +33,37 @@
             color: white;
             border-color: #9f1239;
         }
+        .nav-link {
+            position: relative;
+        }
+        .nav-link:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 0;
+            background-color: #9f1239;
+            transition: width 0.3s;
+        }
+        .nav-link:hover:after {
+            width: 100%;
+        }
     </style>
 </head>
 <body class="bg-[#fdf4f0]">
 
     <!-- HEADER -->
     <header class="bg-white shadow-md sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-6 py-6 flex justify-between items-center">
-            <h1 class="text-4xl font-bold text-rose-700">Zamirazzo</h1>
-            
-            <nav class="flex gap-10 text-lg font-medium">
-                <a href="#" onclick="showPage('inicio')" class="hover:text-rose-600">Início</a>
-                <a href="#" onclick="showPage('loja')" class="hover:text-rose-600">Loja</a>
-                <a href="#" onclick="showPage('sobre')" class="hover:text-rose-600">Sobre</a>
-                <a href="#" onclick="showPage('contato')" class="hover:text-rose-600">Contato</a>
-            </nav>
+        <div class="max-w-7xl mx-auto px-6 py-6">
+            <div class="flex justify-center">
+                <nav class="flex gap-10 text-lg font-medium bg-white px-12 py-4 rounded-full shadow-md">
+                    <a href="#" onclick="showPage('inicio')" class="nav-link hover:text-rose-700">Início</a>
+                    <a href="#" onclick="showPage('loja')" class="nav-link hover:text-rose-700">Loja</a>
+                    <a href="#" onclick="showPage('sobre')" class="nav-link hover:text-rose-700">Sobre</a>
+                    <a href="#" onclick="showPage('contato')" class="nav-link hover:text-rose-700">Contato</a>
+                </nav>
+            </div>
         </div>
     </header>
 
@@ -57,7 +75,7 @@
                 Brincos, colares, pulseiras e chapéus feitos à mão com miçangas e muito amor.
             </p>
             <button onclick="showPage('loja')" 
-                    class="bg-rose-700 hover:bg-rose-800 text-white text-xl px-14 py-5 rounded-full font-medium">
+                    class="bg-rose-700 hover:bg-rose-800 text-white text-xl px-14 py-5 rounded-full font-medium transition">
                 Ver a Coleção
             </button>
         </div>
@@ -88,11 +106,11 @@
                     <h2 class="text-5xl font-bold mb-8 text-rose-800">Sobre a Zamirazzo</h2>
                     <p class="text-lg text-zinc-600 leading-relaxed">
                         Olá! Eu sou a criadora da Zamirazzo.<br>
-                        Transformo miçangas em peças únicas, cheias de cor e personalidade.
+                        Transformo miçangas em peças cheias de cor, vida e personalidade.
                     </p>
                     <p class="text-lg text-zinc-600 leading-relaxed mt-6">
-                        Cada acessório é feito com muito amor e atenção aos detalhes. 
-                        Também faço peças personalizadas.
+                        Cada peça é feita com muito amor e atenção aos detalhes. 
+                        Aceito encomendas personalizadas.
                     </p>
                 </div>
                 <img src="img/sobre.jpg" alt="Criadora" class="rounded-3xl shadow-2xl">
@@ -159,9 +177,7 @@
         function renderProducts(filteredProducts) {
             const container = document.getElementById('products-grid');
             container.innerHTML = '';
-            filteredProducts.forEach(product => {
-                container.appendChild(createProductCard(product));
-            });
+            filteredProducts.forEach(product => container.appendChild(createProductCard(product)));
         }
 
         function filterCategory(category) {
@@ -181,7 +197,6 @@
             window.open(`https://wa.me/5549998109578?text=${msg}`, '_blank');
         }
 
-        // Inicializa
         window.onload = () => {
             renderProducts(products);
             showPage('inicio');
