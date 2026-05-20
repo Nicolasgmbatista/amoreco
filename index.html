@@ -7,9 +7,21 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
     
-    <!-- Firebase SDK -->
+    <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    
+    <style>
+        body { font-family: 'Segoe UI', system-ui, sans-serif; }
+        .hero { 
+            background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)), url('img/banner.jpeg') center/cover; 
+            height: 100vh; 
+            display: none; 
+        }
+        .hero.active { display: flex; }
+        .main-page { display: none; padding-top: 80px; }
+        .main-page.active { display: block; }
+    </style>
 </head>
 <body class="bg-[#fdf4f0]">
 
@@ -27,8 +39,8 @@
         </div>
     </header>
 
-    <!-- BANNER INICIAL -->
-    <div id="inicio" class="hero active items-center text-white" style="background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)), url('img/banner.jpeg') center/cover; height: 100vh;">
+    <!-- BANNER -->
+    <div id="inicio" class="hero active items-center text-white">
         <div class="max-w-7xl mx-auto px-6 text-center">
             <h2 class="text-5xl md:text-7xl font-bold mb-6">Artesanal.<br>Único.<br>Seu.</h2>
             <p class="text-xl md:text-3xl mb-10">Brincos, colares, pulseiras e chapéus feitos à mão com miçangas e muito amor.</p>
@@ -36,10 +48,38 @@
         </div>
     </div>
 
-    <!-- LOJA, SOBRE, CONTATO (resumido) -->
-    <div id="loja" class="main-page"> ... </div>
-    <div id="sobre" class="main-page"> ... </div>
-    <div id="contato" class="main-page"> ... </div>
+    <!-- LOJA -->
+    <div id="loja" class="main-page">
+        <div class="max-w-7xl mx-auto px-5 py-12">
+            <h2 class="text-4xl md:text-5xl font-bold text-center mb-12 text-rose-800">Nossa Coleção</h2>
+            <div id="products-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
+        </div>
+    </div>
+
+    <!-- SOBRE -->
+    <div id="sobre" class="main-page bg-white">
+        <div class="max-w-5xl mx-auto px-6 py-16">
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div>
+                    <h2 class="text-4xl md:text-5xl font-bold mb-8 text-rose-800">Sobre a Zamirazzo</h2>
+                    <p class="text-lg text-zinc-600">Transformo miçangas em peças únicas cheias de personalidade.</p>
+                </div>
+                <img src="img/sobre.jpg" alt="Criadora" class="rounded-3xl shadow-2xl">
+            </div>
+        </div>
+    </div>
+
+    <!-- CONTATO -->
+    <div id="contato" class="main-page bg-[#f8e9d8]">
+        <div class="max-w-7xl mx-auto px-6 py-20 text-center">
+            <h2 class="text-4xl md:text-5xl font-bold mb-6 text-rose-800">Ficou interessado?</h2>
+            <p class="text-xl mb-10">Clique abaixo e vamos conversar!</p>
+            <a href="https://wa.me/5549998109578" target="_blank" class="inline-flex items-center gap-4 bg-green-600 text-white px-10 py-6 rounded-full text-xl">
+                <i class="fab fa-whatsapp text-4xl"></i>
+                Falar no WhatsApp
+            </a>
+        </div>
+    </div>
 
     <!-- ====================== PAINEL DA VENDEDORA ====================== -->
     <div id="admin" class="main-page bg-white min-h-screen">
@@ -47,27 +87,19 @@
             <h2 class="text-4xl font-bold text-center mb-8">👩‍💼 Painel da Vendedora</h2>
             
             <div id="loginScreen">
-                <input type="password" id="adminPass" placeholder="Senha da Vendedora" 
-                       class="border-2 border-rose-300 p-4 rounded-2xl w-full max-w-md mx-auto block text-center text-lg">
-                <button onclick="loginAdmin()" 
-                        class="mt-6 bg-rose-700 hover:bg-rose-800 text-white px-10 py-4 rounded-2xl w-full max-w-md mx-auto block text-lg font-medium">
-                    Entrar no Painel
-                </button>
+                <input type="password" id="adminPass" placeholder="Senha" class="border p-4 rounded-2xl w-full max-w-md mx-auto block text-center">
+                <button onclick="loginAdmin()" class="mt-6 bg-rose-700 text-white px-10 py-4 rounded-2xl w-full max-w-md mx-auto block">Entrar</button>
             </div>
 
             <div id="adminPanel" class="hidden">
-                <button onclick="addProduct()" 
-                        class="bg-green-600 hover:bg-green-700 text-white px-8 py-4 rounded-2xl mb-8 text-lg font-medium">
-                    + Adicionar Novo Produto
-                </button>
-                
-                <div id="adminProductsList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+                <button onclick="addProduct()" class="bg-green-600 text-white px-8 py-4 rounded-2xl mb-8">+ Novo Produto</button>
+                <div id="adminProductsList" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
             </div>
         </div>
     </div>
 
     <script>
-        // ==================== SEU FIREBASE CONFIG ====================
+        // ==================== FIREBASE CONFIG ====================
         const firebaseConfig = {
           apiKey: "AIzaSyAzRUtxjZey4wQGiApQaJ1xU9DxyJrnzqo",
           authDomain: "zamirazzo.firebaseapp.com",
@@ -80,7 +112,6 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        // ==================== FUNÇÕES ====================
         function showPage(pageId) {
             document.querySelectorAll('.hero, .main-page').forEach(el => el.classList.remove('active'));
             if (pageId === 'inicio') {
@@ -92,34 +123,28 @@
 
         function loginAdmin() {
             const pass = document.getElementById('adminPass').value;
-            if (pass === "zamirazzo2025") {   // ← MUDE ESTA SENHA DEPOIS!
+            if (pass === "zamirazzo2025") {
                 document.getElementById('loginScreen').classList.add('hidden');
                 document.getElementById('adminPanel').classList.remove('hidden');
-                loadProducts();
+                loadAdminProducts();
             } else {
                 alert("Senha incorreta!");
             }
         }
 
-        async function loadProducts() {
+        async function loadAdminProducts() {
             const snapshot = await db.collection("products").get();
             const container = document.getElementById('adminProductsList');
             container.innerHTML = "";
-
             snapshot.forEach(doc => {
                 const p = doc.data();
                 const div = document.createElement('div');
-                div.className = "border rounded-3xl overflow-hidden bg-white";
+                div.className = "border rounded-3xl p-4 bg-white";
                 div.innerHTML = `
-                    <img src="${p.image || 'https://via.placeholder.com/300'}" class="w-full h-48 object-cover">
-                    <div class="p-5">
-                        <h3 class="font-semibold">${p.name}</h3>
-                        <p class="text-rose-600 font-bold">${p.price}</p>
-                        <button onclick="deleteProduct('${doc.id}')" 
-                                class="mt-4 w-full bg-red-600 text-white py-3 rounded-2xl text-sm">
-                            Excluir Produto
-                        </button>
-                    </div>
+                    <img src="${p.image}" class="w-full h-48 object-cover rounded-xl">
+                    <h3 class="font-semibold mt-3">${p.name}</h3>
+                    <p class="text-rose-600 font-bold">${p.price}</p>
+                    <button onclick="deleteProduct('${doc.id}')" class="mt-4 w-full bg-red-600 text-white py-3 rounded-2xl">Excluir</button>
                 `;
                 container.appendChild(div);
             });
@@ -128,34 +153,26 @@
         async function addProduct() {
             const name = prompt("Nome do produto:");
             if (!name) return;
-            
-            const price = prompt("Preço (ex: R$ 45,00):");
-            const category = prompt("Categoria (brincos, colares, pulseiras, chapeus):", "brincos");
+            const price = prompt("Preço:");
             const image = prompt("URL da imagem:", "img/brinco1.jpg");
-            const description = prompt("Descrição curta:", "");
 
             await db.collection("products").add({
                 name: name,
                 price: price,
-                category: category,
                 image: image,
-                description: description,
                 createdAt: new Date()
             });
-
-            alert("✅ Produto adicionado com sucesso!");
-            loadProducts();
+            alert("Produto adicionado!");
+            loadAdminProducts();
         }
 
         async function deleteProduct(id) {
-            if (confirm("Tem certeza que deseja excluir este produto?")) {
+            if (confirm("Excluir este produto?")) {
                 await db.collection("products").doc(id).delete();
-                alert("Produto excluído!");
-                loadProducts();
+                loadAdminProducts();
             }
         }
 
-        // Inicialização
         window.onload = () => {
             showPage('inicio');
         };
