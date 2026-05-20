@@ -7,15 +7,9 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
     
-    <style>
-        body { font-family: 'Segoe UI', system-ui, sans-serif; }
-        .hero { background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)), url('img/banner.jpeg') center/cover; height: 100vh; display: none; }
-        .hero.active { display: flex; }
-        .main-page { display: none; padding-top: 80px; }
-        .main-page.active { display: block; }
-        .product-card { transition: all 0.4s ease; }
-        .product-card:hover { transform: translateY(-8px); }
-    </style>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 </head>
 <body class="bg-[#fdf4f0]">
 
@@ -33,46 +27,60 @@
         </div>
     </header>
 
-    <!-- BANNER -->
-    <div id="inicio" class="hero active items-center text-white">
+    <!-- BANNER INICIAL -->
+    <div id="inicio" class="hero active items-center text-white" style="background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)), url('img/banner.jpeg') center/cover; height: 100vh;">
         <div class="max-w-7xl mx-auto px-6 text-center">
             <h2 class="text-5xl md:text-7xl font-bold mb-6">Artesanal.<br>Único.<br>Seu.</h2>
-            <p class="text-xl md:text-3xl mb-10">Brincos, colares, pulseiras e chapéus feitos à mão com miçangas.</p>
+            <p class="text-xl md:text-3xl mb-10">Brincos, colares, pulseiras e chapéus feitos à mão com miçangas e muito amor.</p>
             <button onclick="showPage('loja')" class="bg-rose-700 hover:bg-rose-800 text-white text-xl px-12 py-5 rounded-full">Ver a Coleção</button>
         </div>
     </div>
 
-    <!-- LOJA, SOBRE, CONTATO... (mantidos iguais) -->
-    <!-- ... (o resto do código continua igual) ... -->
+    <!-- LOJA, SOBRE, CONTATO (resumido) -->
+    <div id="loja" class="main-page"> ... </div>
+    <div id="sobre" class="main-page"> ... </div>
+    <div id="contato" class="main-page"> ... </div>
 
-    <!-- ====================== ÁREA DA VENDEDORA ====================== -->
+    <!-- ====================== PAINEL DA VENDEDORA ====================== -->
     <div id="admin" class="main-page bg-white min-h-screen">
         <div class="max-w-7xl mx-auto px-6 py-10">
             <h2 class="text-4xl font-bold text-center mb-8">👩‍💼 Painel da Vendedora</h2>
             
-            <div class="mb-8">
-                <input type="password" id="adminPass" placeholder="Digite a senha" 
-                       class="border p-3 rounded-lg w-full md:w-80">
+            <div id="loginScreen">
+                <input type="password" id="adminPass" placeholder="Senha da Vendedora" 
+                       class="border-2 border-rose-300 p-4 rounded-2xl w-full max-w-md mx-auto block text-center text-lg">
                 <button onclick="loginAdmin()" 
-                        class="ml-2 bg-rose-700 text-white px-6 py-3 rounded-lg">Entrar</button>
+                        class="mt-6 bg-rose-700 hover:bg-rose-800 text-white px-10 py-4 rounded-2xl w-full max-w-md mx-auto block text-lg font-medium">
+                    Entrar no Painel
+                </button>
             </div>
 
             <div id="adminPanel" class="hidden">
-                <button onclick="addNewProduct()" 
-                        class="bg-green-600 text-white px-6 py-3 rounded-lg mb-6">
+                <button onclick="addProduct()" 
+                        class="bg-green-600 hover:bg-green-700 text-white px-8 py-4 rounded-2xl mb-8 text-lg font-medium">
                     + Adicionar Novo Produto
                 </button>
-
-                <div id="adminProducts" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+                
+                <div id="adminProductsList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
             </div>
         </div>
     </div>
 
     <script>
-        let allProducts = JSON.parse(localStorage.getItem('zamirazzoProducts')) || [
-            { id: 1, name: "Brinco Miçanga Colorful", category: "brincos", price: "R$ 45,00", image: "img/brinco1.jpg", description: "Brincos leves e vibrantes" }
-        ];
+        // ==================== SEU FIREBASE CONFIG ====================
+        const firebaseConfig = {
+          apiKey: "AIzaSyAzRUtxjZey4wQGiApQaJ1xU9DxyJrnzqo",
+          authDomain: "zamirazzo.firebaseapp.com",
+          projectId: "zamirazzo",
+          storageBucket: "zamirazzo.firebasestorage.app",
+          messagingSenderId: "143536414159",
+          appId: "1:143536414159:web:373eed517d649ecd85c6ba"
+        };
 
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // ==================== FUNÇÕES ====================
         function showPage(pageId) {
             document.querySelectorAll('.hero, .main-page').forEach(el => el.classList.remove('active'));
             if (pageId === 'inicio') {
@@ -84,79 +92,71 @@
 
         function loginAdmin() {
             const pass = document.getElementById('adminPass').value;
-            if (pass === "123456" || pass === "zamirazzo") {   // ← Mude a senha depois
+            if (pass === "zamirazzo2025") {   // ← MUDE ESTA SENHA DEPOIS!
+                document.getElementById('loginScreen').classList.add('hidden');
                 document.getElementById('adminPanel').classList.remove('hidden');
+                loadProducts();
             } else {
                 alert("Senha incorreta!");
             }
         }
 
-        function renderAdminProducts() {
-            const container = document.getElementById('adminProducts');
-            container.innerHTML = '';
-            allProducts.forEach((p, index) => {
+        async function loadProducts() {
+            const snapshot = await db.collection("products").get();
+            const container = document.getElementById('adminProductsList');
+            container.innerHTML = "";
+
+            snapshot.forEach(doc => {
+                const p = doc.data();
                 const div = document.createElement('div');
-                div.className = "border rounded-2xl p-4 bg-white";
+                div.className = "border rounded-3xl overflow-hidden bg-white";
                 div.innerHTML = `
-                    <img src="${p.image}" class="w-full h-48 object-cover rounded-xl">
-                    <h3 class="font-semibold mt-3">${p.name}</h3>
-                    <p class="text-sm text-zinc-500">${p.price}</p>
-                    <div class="flex gap-2 mt-4">
-                        <button onclick="editProduct(${index})" class="flex-1 bg-blue-600 text-white py-2 rounded-lg">Editar</button>
-                        <button onclick="deleteProduct(${index})" class="flex-1 bg-red-600 text-white py-2 rounded-lg">Excluir</button>
+                    <img src="${p.image || 'https://via.placeholder.com/300'}" class="w-full h-48 object-cover">
+                    <div class="p-5">
+                        <h3 class="font-semibold">${p.name}</h3>
+                        <p class="text-rose-600 font-bold">${p.price}</p>
+                        <button onclick="deleteProduct('${doc.id}')" 
+                                class="mt-4 w-full bg-red-600 text-white py-3 rounded-2xl text-sm">
+                            Excluir Produto
+                        </button>
                     </div>
                 `;
                 container.appendChild(div);
             });
         }
 
-        function addNewProduct() {
+        async function addProduct() {
             const name = prompt("Nome do produto:");
             if (!name) return;
+            
             const price = prompt("Preço (ex: R$ 45,00):");
-            const category = prompt("Categoria (brincos, colares, pulseiras, chapeus):");
-            const desc = prompt("Descrição curta:");
+            const category = prompt("Categoria (brincos, colares, pulseiras, chapeus):", "brincos");
+            const image = prompt("URL da imagem:", "img/brinco1.jpg");
+            const description = prompt("Descrição curta:", "");
 
-            allProducts.push({
-                id: Date.now(),
+            await db.collection("products").add({
                 name: name,
                 price: price,
-                category: category || "brincos",
-                image: "img/brinco1.jpg", // depois ela pode trocar
-                description: desc || ""
+                category: category,
+                image: image,
+                description: description,
+                createdAt: new Date()
             });
 
-            localStorage.setItem('zamirazzoProducts', JSON.stringify(allProducts));
-            renderAdminProducts();
-            alert("Produto adicionado!");
+            alert("✅ Produto adicionado com sucesso!");
+            loadProducts();
         }
 
-        function deleteProduct(index) {
+        async function deleteProduct(id) {
             if (confirm("Tem certeza que deseja excluir este produto?")) {
-                allProducts.splice(index, 1);
-                localStorage.setItem('zamirazzoProducts', JSON.stringify(allProducts));
-                renderAdminProducts();
+                await db.collection("products").doc(id).delete();
+                alert("Produto excluído!");
+                loadProducts();
             }
         }
 
-        function editProduct(index) {
-            const p = allProducts[index];
-            const newName = prompt("Novo nome:", p.name);
-            if (newName) p.name = newName;
-            const newPrice = prompt("Novo preço:", p.price);
-            if (newPrice) p.price = newPrice;
-            
-            localStorage.setItem('zamirazzoProducts', JSON.stringify(allProducts));
-            renderAdminProducts();
-        }
-
-        function contactWhatsApp(name) {
-            const msg = encodeURIComponent(`Olá! Fiquei interessada no "${name}". Pode me dar mais informações?`);
-            window.open(`https://wa.me/5549998109578?text=${msg}`, '_blank');
-        }
-
+        // Inicialização
         window.onload = () => {
-            renderAdminProducts();
             showPage('inicio');
         };
     </script>
