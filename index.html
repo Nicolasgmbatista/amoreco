@@ -47,7 +47,7 @@
         </div>
     </header>
 
-    <!-- BANNER -->
+    <!-- BANNER INICIAL -->
     <div id="inicio" class="hero active items-center text-white">
         <div class="max-w-7xl mx-auto px-6 text-center">
             <h2 class="text-5xl md:text-7xl font-bold mb-6">Artesanal.<br>Único.<br>Seu.</h2>
@@ -112,28 +112,25 @@
     </div>
 
     <!-- ====================== ÁREA DA VENDEDORA ====================== -->
-    <div id="admin" class="main-page bg-white">
+    <div id="admin" class="main-page bg-white min-h-screen">
         <div class="max-w-7xl mx-auto px-6 py-10">
             <h2 class="text-4xl font-bold text-center mb-8">👩‍💼 Painel da Vendedora</h2>
             
-            <div id="loginScreen" class="max-w-md mx-auto">
-                <input type="password" id="adminPass" placeholder="Digite a senha" class="w-full p-5 border-2 border-rose-200 rounded-2xl text-center text-lg">
-                <button onclick="loginAdmin()" class="mt-6 w-full bg-rose-700 text-white py-4 rounded-2xl text-lg font-medium">Entrar</button>
+            <div id="loginScreen">
+                <input type="password" id="adminPass" placeholder="Digite a senha" 
+                       class="w-full max-w-md mx-auto block p-5 border-2 border-rose-200 rounded-2xl text-center text-lg">
+                <button onclick="loginAdmin()" 
+                        class="mt-6 w-full max-w-md mx-auto block bg-rose-700 text-white py-4 rounded-2xl text-lg font-medium">
+                    Entrar no Painel
+                </button>
             </div>
 
             <div id="adminPanel" class="hidden">
-                <button onclick="showManageProducts()" 
-                        class="bg-rose-700 hover:bg-rose-800 text-white px-8 py-4 rounded-2xl text-lg font-medium w-full mb-8">
-                    Gerenciar Produtos
+                <button onclick="addNewProduct()" 
+                        class="bg-green-600 hover:bg-green-700 text-white px-8 py-4 rounded-2xl mb-8 w-full">
+                    + Adicionar Novo Produto
                 </button>
-                
-                <div id="manageProductsArea" class="hidden">
-                    <button onclick="addNewProduct()" 
-                            class="bg-green-600 hover:bg-green-700 text-white px-8 py-4 rounded-2xl mb-8">
-                        + Adicionar Novo Produto
-                    </button>
-                    <div id="adminProductsList" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
-                </div>
+                <div id="adminProductsList" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
             </div>
         </div>
     </div>
@@ -193,36 +190,31 @@
             window.open(`https://wa.me/5549998109578?text=${msg}`, '_blank');
         }
 
-        //-- ====================== ÁREA DA VENDEDORA (CORRIGIDA) ====================== -->
-    <div id="admin" class="main-page bg-white min-h-screen">
-        <div class="max-w-7xl mx-auto px-6 py-10">
-            <h2 class="text-4xl font-bold text-center mb-10 text-rose-800">👩‍💼 Painel da Vendedora</h2>
-            
-            <!-- Tela de Login -->
-            <div id="loginScreen">
-                <div class="max-w-md mx-auto">
-                    <input type="password" id="adminPass" placeholder="Digite a senha" 
-                           class="w-full p-5 border-2 border-rose-200 rounded-2xl text-center text-lg focus:outline-none focus:border-rose-600">
-                    <button onclick="loginAdmin()" 
-                            class="mt-6 w-full bg-rose-700 hover:bg-rose-800 text-white py-5 rounded-2xl text-lg font-medium">
-                        Entrar no Painel
-                    </button>
-                </div>
-            </div>
+        // ==================== ÁREA DA VENDEDORA ====================
+        function loginAdmin() {
+            const pass = document.getElementById('adminPass').value;
+            if (pass === "zamirazzo2025") {
+                document.getElementById('loginScreen').classList.add('hidden');
+                document.getElementById('adminPanel').classList.remove('hidden');
+            } else {
+                alert("Senha incorreta!\nSenha atual: zamirazzo2025");
+            }
+        }
 
-            <!-- Painel Principal -->
-            <div id="adminPanel" class="hidden">
-                <div class="flex justify-between items-center mb-8">
-                    <h3 class="text-2xl font-bold">Gerenciar Produtos</h3>
-                    <button onclick="addNewProduct()" 
-                            class="bg-green-600 hover:bg-green-700 text-white px-8 py-4 rounded-2xl flex items-center gap-2">
-                        <i class="fas fa-plus"></i> Novo Produto
-                    </button>
-                </div>
-                
-                <div id="adminProductsList" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- Produtos aparecem aqui -->
-                </div>
-            </div>
-        </div>
-    </div>
+        function addNewProduct() {
+            const name = prompt("Nome do produto:");
+            if (!name) return;
+            const price = prompt("Preço (ex: R$ 45,00):");
+            const category = prompt("Categoria:", "brincos");
+            const image = prompt("URL da foto:", "img/brinco1.jpg");
+
+            alert(`Produto "${name}" adicionado com sucesso!`);
+        }
+
+        window.onload = () => {
+            renderProducts();
+            showPage('inicio');
+        };
+    </script>
+</body>
+</html>
