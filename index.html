@@ -26,9 +26,6 @@
         .product-card {
             transition: all 0.4s ease;
         }
-        .product-card:hover {
-            transform: translateY(-10px);
-        }
     </style>
 </head>
 <body class="bg-[#fdf4f0]">
@@ -47,7 +44,7 @@
         </div>
     </header>
 
-    <!-- BANNER INICIAL -->
+    <!-- BANNER -->
     <div id="inicio" class="hero active items-center text-white">
         <div class="max-w-7xl mx-auto px-6 text-center">
             <h2 class="text-5xl md:text-7xl font-bold mb-6">Artesanal.<br>Único.<br>Seu.</h2>
@@ -76,19 +73,18 @@
     <!-- SOBRE -->
     <div id="sobre" class="main-page bg-white">
         <div class="max-w-5xl mx-auto px-6 py-20">
-            <div class="grid md:grid-cols-2 gap-16 items-center">
+            <div class="grid md:grid-cols-2 gap-12 items-center">
                 <div>
                     <h2 class="text-4xl md:text-5xl font-bold mb-8 text-rose-800">Sobre a Zamirazzo</h2>
                     <p class="text-lg text-zinc-600 leading-relaxed">
                         Olá! Eu sou a criadora da Zamirazzo.<br>
-                        Transformo miçangas em peças cheias de cor, energia e personalidade.
+                        Transformo miçangas em peças cheias de cor, vida e personalidade.
                     </p>
                     <p class="text-lg text-zinc-600 leading-relaxed mt-6">
-                        Cada peça é feita com muito amor e atenção aos detalhes. 
-                        Posso criar modelos personalizados especialmente para você.
+                        Cada peça é feita com muito amor. Aceito encomendas personalizadas.
                     </p>
                 </div>
-                <img src="img/sobre.jpg" alt="Criadora Zamirazzo" class="rounded-3xl shadow-2xl">
+                <img src="img/sobre.jpg" alt="Criadora" class="rounded-3xl shadow-2xl">
             </div>
         </div>
     </div>
@@ -108,6 +104,23 @@
                     <i class="fab fa-instagram text-7xl text-pink-600"></i>
                     <span class="mt-4 text-lg font-medium">Instagram</span>
                 </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- VENDEDORA -->
+    <div id="admin" class="main-page bg-white">
+        <div class="max-w-7xl mx-auto px-6 py-10">
+            <h2 class="text-4xl font-bold text-center mb-8">👩‍💼 Painel da Vendedora</h2>
+            
+            <div id="loginScreen">
+                <input type="password" id="adminPass" placeholder="Digite a senha" class="w-full max-w-md mx-auto block p-5 border-2 rounded-2xl text-center text-lg">
+                <button onclick="loginAdmin()" class="mt-6 w-full max-w-md mx-auto block bg-rose-700 text-white py-4 rounded-2xl text-lg">Entrar</button>
+            </div>
+
+            <div id="adminPanel" class="hidden">
+                <button onclick="addProduct()" class="bg-green-600 text-white px-8 py-4 rounded-2xl mb-8">+ Adicionar Novo Produto</button>
+                <div id="adminProductsList" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
             </div>
         </div>
     </div>
@@ -141,8 +154,7 @@
                 <div class="p-5">
                     <h3 class="font-semibold">${product.name}</h3>
                     <p class="text-zinc-500 text-sm">${product.description}</p>
-                    <button onclick="contactWhatsApp('${product.name}')" 
-                            class="mt-5 w-full bg-rose-600 hover:bg-rose-700 text-white py-4 rounded-2xl font-medium">
+                    <button onclick="contactWhatsApp('${product.name}')" class="mt-5 w-full bg-rose-600 hover:bg-rose-700 text-white py-4 rounded-2xl font-medium">
                         <i class="fab fa-whatsapp"></i> Quero este!
                     </button>
                 </div>
@@ -150,16 +162,22 @@
             return card;
         }
 
-        function renderProducts() {
+        function renderProducts(filtered) {
             const container = document.getElementById('products-grid');
             container.innerHTML = '';
-            products.forEach(p => container.appendChild(createProductCard(p)));
+            filtered.forEach(p => container.appendChild(createProductCard(p)));
         }
 
-        function filterCategory(cat) {
+        function filterCategory(category) {
             document.querySelectorAll('#loja button').forEach(btn => btn.classList.remove('active-filter'));
-            document.getElementById('btn-' + cat).classList.add('active-filter');
-            renderProducts();
+            document.getElementById('btn-' + category).classList.add('active-filter');
+
+            if (category === 'all') {
+                renderProducts(products);
+            } else {
+                const filtered = products.filter(p => p.category === category);
+                renderProducts(filtered);
+            }
         }
 
         function contactWhatsApp(name) {
@@ -167,8 +185,23 @@
             window.open(`https://wa.me/5549998109578?text=${msg}`, '_blank');
         }
 
+        // Área da Vendedora
+        function loginAdmin() {
+            const pass = document.getElementById('adminPass').value;
+            if (pass === "zamirazzo2025") {
+                document.getElementById('loginScreen').classList.add('hidden');
+                document.getElementById('adminPanel').classList.remove('hidden');
+            } else {
+                alert("Senha incorreta! Use: zamirazzo2025");
+            }
+        }
+
+        function addProduct() {
+            alert("Funcionalidade de adicionar produto em breve.");
+        }
+
         window.onload = () => {
-            renderProducts();
+            renderProducts(products);
             showPage('inicio');
         };
     </script>
