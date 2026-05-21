@@ -10,23 +10,35 @@
     <style>
         body { font-family: 'Segoe UI', system-ui, sans-serif; }
         
-        .page {
-            display: none;
-        }
-        .page.active {
-            display: block;
-        }
-        
         .hero {
             background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)), url('img/banner.jpeg') center/cover;
             height: 100vh;
+            display: none;
         }
-        
+        .hero.active {
+            display: flex;
+        }
+
+        .main-page {
+            display: none;
+            padding-top: 90px;
+        }
+        .main-page.active {
+            display: block;
+        }
+
         .product-card {
             transition: all 0.4s ease;
         }
-        .product-card:hover {
-            transform: translateY(-10px);
+
+        /* RESPONSIVO */
+        #products-grid {
+            grid-template-columns: repeat(2, 1fr);           /* Celular: 2 colunas */
+        }
+        @media (min-width: 1024px) {
+            #products-grid {
+                grid-template-columns: repeat(4, 1fr);       /* Computador: 4 colunas */
+            }
         }
     </style>
 </head>
@@ -47,22 +59,17 @@
         </div>
     </header>
 
-    <!-- ==================== INÍCIO ==================== -->
-    <div id="inicio" class="page active hero flex items-center text-white">
+    <!-- ==================== BANNER (SÓ NO INÍCIO) ==================== -->
+    <div id="inicio" class="hero active items-center text-white">
         <div class="max-w-7xl mx-auto px-6 text-center">
             <h2 class="text-5xl md:text-7xl font-bold mb-6">Artesanal.<br>Único.<br>Seu.</h2>
-            <p class="text-xl md:text-3xl mb-10 max-w-2xl mx-auto">
-                Brincos, colares, pulseiras e chapéus feitos à mão com miçangas e muito amor.
-            </p>
-            <button onclick="showPage('loja')" 
-                    class="bg-rose-700 hover:bg-rose-800 text-white text-xl px-12 py-5 rounded-full font-medium">
-                Ver a Coleção
-            </button>
+            <p class="text-xl md:text-3xl mb-10">Brincos, colares, pulseiras e chapéus feitos à mão com miçangas e muito amor.</p>
+            <button onclick="showPage('loja')" class="bg-rose-700 hover:bg-rose-800 text-white text-xl px-12 py-5 rounded-full">Ver a Coleção</button>
         </div>
     </div>
 
     <!-- ==================== LOJA ==================== -->
-    <div id="loja" class="page">
+    <div id="loja" class="main-page">
         <div class="max-w-7xl mx-auto px-5 py-12">
             <h2 class="text-4xl md:text-5xl font-bold text-center mb-12 text-rose-800">Nossa Coleção</h2>
             
@@ -74,13 +81,13 @@
                 <button onclick="filterCategory('chapeus')" id="btn-chapeus" class="px-6 py-3 rounded-full border font-medium">Chapéus</button>
             </div>
 
-            <div id="products-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
+            <div id="products-grid" class="grid gap-6"></div>
         </div>
     </div>
 
     <!-- ==================== SOBRE ==================== -->
-    <div id="sobre" class="page bg-white">
-        <div class="max-w-5xl mx-auto px-6 py-20">
+    <div id="sobre" class="main-page bg-white">
+        <div class="max-w-5xl mx-auto px-6 py-16">
             <div class="grid md:grid-cols-2 gap-12 items-center">
                 <div>
                     <h2 class="text-4xl md:text-5xl font-bold mb-8 text-rose-800">Sobre a Zamirazzo</h2>
@@ -98,10 +105,10 @@
     </div>
 
     <!-- ==================== CONTATO ==================== -->
-    <div id="contato" class="page bg-[#f8e9d8]">
-        <div class="max-w-7xl mx-auto px-6 py-24 text-center">
+    <div id="contato" class="main-page bg-[#f8e9d8]">
+        <div class="max-w-7xl mx-auto px-6 py-20 text-center">
             <h2 class="text-4xl md:text-5xl font-bold mb-6 text-rose-800">Ficou interessado?</h2>
-            <p class="text-xl mb-12">Clique abaixo e vamos conversar sobre sua peça.</p>
+            <p class="text-xl mb-12">Clique abaixo e vamos conversar sobre sua peça dos sonhos.</p>
             
             <div class="flex justify-center gap-12">
                 <a href="https://wa.me/5549998109578" target="_blank" class="flex flex-col items-center hover:scale-110 transition">
@@ -116,21 +123,42 @@
         </div>
     </div>
 
+    <!-- ==================== ÁREA DA VENDEDORA (Melhorada) ==================== -->
+    <div id="admin" class="main-page bg-white">
+        <div class="max-w-7xl mx-auto px-6 py-10">
+            <h2 class="text-4xl font-bold text-center mb-8">👩‍💼 Painel da Vendedora</h2>
+            
+            <div id="loginScreen" class="max-w-md mx-auto">
+                <input type="password" id="adminPass" placeholder="Digite a senha" 
+                       class="w-full p-4 border-2 border-rose-200 rounded-2xl text-center text-lg">
+                <button onclick="loginAdmin()" 
+                        class="mt-6 w-full bg-rose-700 hover:bg-rose-800 text-white py-4 rounded-2xl text-lg font-medium">
+                    Entrar no Painel
+                </button>
+            </div>
+
+            <div id="adminPanel" class="hidden">
+                <button onclick="addProduct()" 
+                        class="bg-green-600 hover:bg-green-700 text-white px-8 py-4 rounded-2xl mb-8">
+                    + Adicionar Novo Produto
+                </button>
+                <div id="adminProductsList" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+            </div>
+        </div>
+    </div>
+
     <script>
         function showPage(pageId) {
-            document.querySelectorAll('.page').forEach(page => {
-                page.classList.remove('active');
-            });
-            document.getElementById(pageId).classList.add('active');
+            document.querySelectorAll('.hero, .main-page').forEach(el => el.classList.remove('active'));
+            if (pageId === 'inicio') {
+                document.getElementById('inicio').classList.add('active');
+            } else {
+                document.getElementById(pageId).classList.add('active');
+            }
         }
 
-        const products = [
-            { name: "Brinco Miçanga Colorful", category: "brincos", price: "R$ 45,00", image: "img/brinco1.jpg", description: "Brincos leves e vibrantes" },
-            { name: "Colar Longo Boho", category: "colares", price: "R$ 85,00", image: "img/colar1.jpg", description: "Colar longo" },
-            { name: "Pulseira Ajustável", category: "pulseiras", price: "R$ 35,00", image: "img/pulseira1.jpg", description: "Pulseira delicada" },
-            { name: "Chapéu Decorado Boho", category: "chapeus", price: "R$ 120,00", image: "img/chapeu1.jpeg", description: "Chapéu com detalhes" },
-            { name: "Chapéu Miçanga Floral", category: "chapeus", price: "R$ 135,00", image: "img/chapeu2.jpeg", description: "Modelo floral" }
-        ];
+        // ==================== PRODUTOS ====================
+        const products = [ /* seus produtos */ ];
 
         function createProductCard(product) {
             const card = document.createElement('div');
@@ -138,7 +166,7 @@
             card.innerHTML = `
                 <div class="h-52 md:h-72 relative">
                     <img src="${product.image}" class="w-full h-full object-cover">
-                    <div class="absolute top-3 right-3 bg-white px-3 py-1 rounded-full font-bold shadow text-sm">${product.price}</div>
+                    <div class="absolute top-3 right-3 bg-white px-3 py-1 rounded-full font-bold shadow">${product.price}</div>
                 </div>
                 <div class="p-5">
                     <h3 class="font-semibold">${product.name}</h3>
@@ -155,9 +183,7 @@
         function renderProducts() {
             const container = document.getElementById('products-grid');
             container.innerHTML = '';
-            products.forEach(product => {
-                container.appendChild(createProductCard(product));
-            });
+            products.forEach(p => container.appendChild(createProductCard(p)));
         }
 
         function filterCategory(cat) {
@@ -171,7 +197,21 @@
             window.open(`https://wa.me/5549998109578?text=${msg}`, '_blank');
         }
 
-        // Inicia o site
+        // ==================== ÁREA DA VENDEDORA ====================
+        function loginAdmin() {
+            const pass = document.getElementById('adminPass').value;
+            if (pass === "zamirazzo2025") {
+                document.getElementById('loginScreen').classList.add('hidden');
+                document.getElementById('adminPanel').classList.remove('hidden');
+            } else {
+                alert("Senha incorreta!");
+            }
+        }
+
+        function addProduct() {
+            alert("Funcionalidade de adicionar produto em desenvolvimento.");
+        }
+
         window.onload = () => {
             renderProducts();
             showPage('inicio');
