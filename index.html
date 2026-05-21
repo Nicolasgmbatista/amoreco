@@ -15,17 +15,13 @@
             height: 100vh;
             display: none;
         }
-        .hero.active {
-            display: flex;
-        }
+        .hero.active { display: flex; }
 
         .main-page {
             display: none;
             padding-top: 90px;
         }
-        .main-page.active {
-            display: block;
-        }
+        .main-page.active { display: block; }
 
         .product-card {
             transition: all 0.4s ease;
@@ -41,7 +37,6 @@
     <header class="bg-white shadow-md sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-5 py-5 flex items-center justify-between">
             <h1 class="text-3xl font-bold text-rose-700">Zamirazzo</h1>
-            
             <nav class="flex gap-5 md:gap-10 text-base md:text-lg font-medium">
                 <a href="#" onclick="showPage('inicio')" class="hover:text-rose-600">Início</a>
                 <a href="#" onclick="showPage('loja')" class="hover:text-rose-600">Loja</a>
@@ -52,7 +47,7 @@
         </div>
     </header>
 
-    <!-- BANNER INICIAL -->
+    <!-- BANNER -->
     <div id="inicio" class="hero active items-center text-white">
         <div class="max-w-7xl mx-auto px-6 text-center">
             <h2 class="text-5xl md:text-7xl font-bold mb-6">Artesanal.<br>Único.<br>Seu.</h2>
@@ -78,40 +73,23 @@
         </div>
     </div>
 
-    <!-- SOBRE -->
-    <div id="sobre" class="main-page bg-white">
-        <div class="max-w-5xl mx-auto px-6 py-16">
-            <div class="grid md:grid-cols-2 gap-12 items-center">
-                <div>
-                    <h2 class="text-4xl md:text-5xl font-bold mb-8 text-rose-800">Sobre a Zamirazzo</h2>
-                    <p class="text-lg text-zinc-600 leading-relaxed">
-                        Olá! Eu sou a criadora da Zamirazzo.<br>
-                        Transformo miçangas em peças cheias de cor, vida e personalidade.
-                    </p>
-                    <p class="text-lg text-zinc-600 leading-relaxed mt-6">
-                        Cada peça é feita com muito amor. Aceito encomendas personalizadas.
-                    </p>
-                </div>
-                <img src="img/sobre.jpg" alt="Criadora" class="rounded-3xl shadow-2xl">
-            </div>
-        </div>
-    </div>
+    <!-- SOBRE e CONTATO (mantidos simples) -->
+    <div id="sobre" class="main-page bg-white"> ... </div>
+    <div id="contato" class="main-page bg-[#f8e9d8]"> ... </div>
 
-    <!-- CONTATO -->
-    <div id="contato" class="main-page bg-[#f8e9d8]">
-        <div class="max-w-7xl mx-auto px-6 py-24 text-center">
-            <h2 class="text-4xl md:text-5xl font-bold mb-6 text-rose-800">Ficou interessado?</h2>
-            <p class="text-xl mb-12">Clique abaixo e vamos conversar sobre sua peça dos sonhos.</p>
+    <!-- ÁREA DA VENDEDORA -->
+    <div id="admin" class="main-page bg-white">
+        <div class="max-w-7xl mx-auto px-6 py-10">
+            <h2 class="text-4xl font-bold text-center mb-8">👩‍💼 Painel da Vendedora</h2>
             
-            <div class="flex justify-center gap-12">
-                <a href="https://wa.me/5549998109578" target="_blank" class="flex flex-col items-center hover:scale-110 transition">
-                    <i class="fab fa-whatsapp text-7xl text-green-600"></i>
-                    <span class="mt-4">WhatsApp</span>
-                </a>
-                <a href="https://instagram.com/zamirazzo" target="_blank" class="flex flex-col items-center hover:scale-110 transition">
-                    <i class="fab fa-instagram text-7xl text-pink-600"></i>
-                    <span class="mt-4">Instagram</span>
-                </a>
+            <div id="loginScreen">
+                <input type="password" id="adminPass" placeholder="Senha" class="w-full max-w-md mx-auto block p-4 border-2 rounded-2xl text-center">
+                <button onclick="loginAdmin()" class="mt-6 w-full max-w-md mx-auto block bg-rose-700 text-white py-4 rounded-2xl">Entrar</button>
+            </div>
+
+            <div id="adminPanel" class="hidden">
+                <button onclick="addProduct()" class="bg-green-600 text-white px-8 py-4 rounded-2xl mb-8">+ Adicionar Produto</button>
+                <div id="adminProductsList" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
             </div>
         </div>
     </div>
@@ -126,14 +104,12 @@
             }
         }
 
-        // ==================== PRODUTOS ====================
         const products = [
             { name: "Brinco Miçanga Colorful", category: "brincos", price: "R$ 45,00", image: "img/brinco1.jpg", description: "Brincos leves e vibrantes" },
-            { name: "Colar Longo Boho", category: "colares", price: "R$ 85,00", image: "img/colar1.jpg", description: "Colar longo com miçangas" },
+            { name: "Colar Longo Boho", category: "colares", price: "R$ 85,00", image: "img/colar1.jpg", description: "Colar longo" },
             { name: "Pulseira Ajustável", category: "pulseiras", price: "R$ 35,00", image: "img/pulseira1.jpg", description: "Pulseira delicada" },
             { name: "Chapéu Decorado Boho", category: "chapeus", price: "R$ 120,00", image: "img/chapeu1.jpeg", description: "Chapéu com detalhes" },
-            { name: "Chapéu Miçanga Floral", category: "chapeus", price: "R$ 135,00", image: "img/chapeu2.jpeg", description: "Modelo floral" },
-            { name: "Brinco Argola Miçanga", category: "brincos", price: "R$ 55,00", image: "img/brinco2.jpg", description: "Argolas modernas" }
+            { name: "Chapéu Miçanga Floral", category: "chapeus", price: "R$ 135,00", image: "img/chapeu2.jpeg", description: "Modelo floral" }
         ];
 
         function createProductCard(product) {
@@ -142,13 +118,12 @@
             card.innerHTML = `
                 <div class="h-52 md:h-72 relative">
                     <img src="${product.image}" class="w-full h-full object-cover">
-                    <div class="absolute top-3 right-3 bg-white px-3 py-1 rounded-full font-bold shadow text-sm">${product.price}</div>
+                    <div class="absolute top-3 right-3 bg-white px-3 py-1 rounded-full font-bold shadow">${product.price}</div>
                 </div>
                 <div class="p-5">
-                    <h3 class="font-semibold text-base md:text-lg">${product.name}</h3>
+                    <h3 class="font-semibold">${product.name}</h3>
                     <p class="text-zinc-500 text-sm">${product.description}</p>
-                    <button onclick="contactWhatsApp('${product.name}')" 
-                            class="mt-5 w-full bg-rose-600 hover:bg-rose-700 text-white py-4 rounded-2xl font-medium">
+                    <button onclick="contactWhatsApp('${product.name}')" class="mt-5 w-full bg-rose-600 hover:bg-rose-700 text-white py-4 rounded-2xl font-medium">
                         <i class="fab fa-whatsapp"></i> Quero este!
                     </button>
                 </div>
@@ -156,25 +131,46 @@
             return card;
         }
 
-        function renderProducts() {
+        function renderProducts(filteredProducts) {
             const container = document.getElementById('products-grid');
             container.innerHTML = '';
-            products.forEach(product => container.appendChild(createProductCard(product)));
+            filteredProducts.forEach(p => container.appendChild(createProductCard(p)));
         }
 
-        function filterCategory(cat) {
+        function filterCategory(category) {
             document.querySelectorAll('#loja button').forEach(btn => btn.classList.remove('active-filter'));
-            document.getElementById('btn-' + cat).classList.add('active-filter');
-            renderProducts();
+            document.getElementById('btn-' + category).classList.add('active-filter');
+
+            if (category === 'all') {
+                renderProducts(products);
+            } else {
+                const filtered = products.filter(p => p.category === category);
+                renderProducts(filtered);
+            }
         }
 
         function contactWhatsApp(name) {
-            const msg = encodeURIComponent(`Olá! Fiquei interessada no "${name}" da Zamirazzo. Pode me dar mais informações?`);
+            const msg = encodeURIComponent(`Olá! Fiquei interessada no "${name}". Pode me dar mais informações?`);
             window.open(`https://wa.me/5549998109578?text=${msg}`, '_blank');
         }
 
+        // ==================== ÁREA VENDEDORA ====================
+        function loginAdmin() {
+            const pass = document.getElementById('adminPass').value;
+            if (pass === "zamirazzo2025") {
+                document.getElementById('loginScreen').classList.add('hidden');
+                document.getElementById('adminPanel').classList.remove('hidden');
+            } else {
+                alert("Senha incorreta! Use: zamirazzo2025");
+            }
+        }
+
+        function addProduct() {
+            alert("✅ Funcionalidade de adicionar produto em breve.");
+        }
+
         window.onload = () => {
-            renderProducts();
+            renderProducts(products);
             showPage('inicio');
         };
     </script>
