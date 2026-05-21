@@ -30,15 +30,8 @@
         .product-card {
             transition: all 0.4s ease;
         }
-
-        /* RESPONSIVO */
-        #products-grid {
-            grid-template-columns: repeat(2, 1fr);           /* Celular: 2 colunas */
-        }
-        @media (min-width: 1024px) {
-            #products-grid {
-                grid-template-columns: repeat(4, 1fr);       /* Computador: 4 colunas */
-            }
+        .product-card:hover {
+            transform: translateY(-10px);
         }
     </style>
 </head>
@@ -59,7 +52,7 @@
         </div>
     </header>
 
-    <!-- ==================== BANNER (SÓ NO INÍCIO) ==================== -->
+    <!-- BANNER INICIAL -->
     <div id="inicio" class="hero active items-center text-white">
         <div class="max-w-7xl mx-auto px-6 text-center">
             <h2 class="text-5xl md:text-7xl font-bold mb-6">Artesanal.<br>Único.<br>Seu.</h2>
@@ -68,12 +61,12 @@
         </div>
     </div>
 
-    <!-- ==================== LOJA ==================== -->
+    <!-- LOJA -->
     <div id="loja" class="main-page">
         <div class="max-w-7xl mx-auto px-5 py-12">
             <h2 class="text-4xl md:text-5xl font-bold text-center mb-12 text-rose-800">Nossa Coleção</h2>
             
-            <div class="flex flex-wrap justify-center gap-3 mb-10">
+            <div class="flex flex-wrap justify-center gap-3 mb-12">
                 <button onclick="filterCategory('all')" id="btn-all" class="active-filter px-6 py-3 rounded-full border font-medium">Todos</button>
                 <button onclick="filterCategory('brincos')" id="btn-brincos" class="px-6 py-3 rounded-full border font-medium">Brincos</button>
                 <button onclick="filterCategory('colares')" id="btn-colares" class="px-6 py-3 rounded-full border font-medium">Colares</button>
@@ -81,11 +74,11 @@
                 <button onclick="filterCategory('chapeus')" id="btn-chapeus" class="px-6 py-3 rounded-full border font-medium">Chapéus</button>
             </div>
 
-            <div id="products-grid" class="grid gap-6"></div>
+            <div id="products-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
         </div>
     </div>
 
-    <!-- ==================== SOBRE ==================== -->
+    <!-- SOBRE -->
     <div id="sobre" class="main-page bg-white">
         <div class="max-w-5xl mx-auto px-6 py-16">
             <div class="grid md:grid-cols-2 gap-12 items-center">
@@ -104,9 +97,9 @@
         </div>
     </div>
 
-    <!-- ==================== CONTATO ==================== -->
+    <!-- CONTATO -->
     <div id="contato" class="main-page bg-[#f8e9d8]">
-        <div class="max-w-7xl mx-auto px-6 py-20 text-center">
+        <div class="max-w-7xl mx-auto px-6 py-24 text-center">
             <h2 class="text-4xl md:text-5xl font-bold mb-6 text-rose-800">Ficou interessado?</h2>
             <p class="text-xl mb-12">Clique abaixo e vamos conversar sobre sua peça dos sonhos.</p>
             
@@ -123,30 +116,6 @@
         </div>
     </div>
 
-    <!-- ==================== ÁREA DA VENDEDORA (Melhorada) ==================== -->
-    <div id="admin" class="main-page bg-white">
-        <div class="max-w-7xl mx-auto px-6 py-10">
-            <h2 class="text-4xl font-bold text-center mb-8">👩‍💼 Painel da Vendedora</h2>
-            
-            <div id="loginScreen" class="max-w-md mx-auto">
-                <input type="password" id="adminPass" placeholder="Digite a senha" 
-                       class="w-full p-4 border-2 border-rose-200 rounded-2xl text-center text-lg">
-                <button onclick="loginAdmin()" 
-                        class="mt-6 w-full bg-rose-700 hover:bg-rose-800 text-white py-4 rounded-2xl text-lg font-medium">
-                    Entrar no Painel
-                </button>
-            </div>
-
-            <div id="adminPanel" class="hidden">
-                <button onclick="addProduct()" 
-                        class="bg-green-600 hover:bg-green-700 text-white px-8 py-4 rounded-2xl mb-8">
-                    + Adicionar Novo Produto
-                </button>
-                <div id="adminProductsList" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
-            </div>
-        </div>
-    </div>
-
     <script>
         function showPage(pageId) {
             document.querySelectorAll('.hero, .main-page').forEach(el => el.classList.remove('active'));
@@ -158,7 +127,14 @@
         }
 
         // ==================== PRODUTOS ====================
-        const products = [ /* seus produtos */ ];
+        const products = [
+            { name: "Brinco Miçanga Colorful", category: "brincos", price: "R$ 45,00", image: "img/brinco1.jpg", description: "Brincos leves e vibrantes" },
+            { name: "Colar Longo Boho", category: "colares", price: "R$ 85,00", image: "img/colar1.jpg", description: "Colar longo com miçangas" },
+            { name: "Pulseira Ajustável", category: "pulseiras", price: "R$ 35,00", image: "img/pulseira1.jpg", description: "Pulseira delicada" },
+            { name: "Chapéu Decorado Boho", category: "chapeus", price: "R$ 120,00", image: "img/chapeu1.jpeg", description: "Chapéu com detalhes" },
+            { name: "Chapéu Miçanga Floral", category: "chapeus", price: "R$ 135,00", image: "img/chapeu2.jpeg", description: "Modelo floral" },
+            { name: "Brinco Argola Miçanga", category: "brincos", price: "R$ 55,00", image: "img/brinco2.jpg", description: "Argolas modernas" }
+        ];
 
         function createProductCard(product) {
             const card = document.createElement('div');
@@ -166,10 +142,10 @@
             card.innerHTML = `
                 <div class="h-52 md:h-72 relative">
                     <img src="${product.image}" class="w-full h-full object-cover">
-                    <div class="absolute top-3 right-3 bg-white px-3 py-1 rounded-full font-bold shadow">${product.price}</div>
+                    <div class="absolute top-3 right-3 bg-white px-3 py-1 rounded-full font-bold shadow text-sm">${product.price}</div>
                 </div>
                 <div class="p-5">
-                    <h3 class="font-semibold">${product.name}</h3>
+                    <h3 class="font-semibold text-base md:text-lg">${product.name}</h3>
                     <p class="text-zinc-500 text-sm">${product.description}</p>
                     <button onclick="contactWhatsApp('${product.name}')" 
                             class="mt-5 w-full bg-rose-600 hover:bg-rose-700 text-white py-4 rounded-2xl font-medium">
@@ -183,7 +159,7 @@
         function renderProducts() {
             const container = document.getElementById('products-grid');
             container.innerHTML = '';
-            products.forEach(p => container.appendChild(createProductCard(p)));
+            products.forEach(product => container.appendChild(createProductCard(product)));
         }
 
         function filterCategory(cat) {
@@ -193,23 +169,8 @@
         }
 
         function contactWhatsApp(name) {
-            const msg = encodeURIComponent(`Olá! Fiquei interessada no "${name}". Pode me dar mais informações?`);
+            const msg = encodeURIComponent(`Olá! Fiquei interessada no "${name}" da Zamirazzo. Pode me dar mais informações?`);
             window.open(`https://wa.me/5549998109578?text=${msg}`, '_blank');
-        }
-
-        // ==================== ÁREA DA VENDEDORA ====================
-        function loginAdmin() {
-            const pass = document.getElementById('adminPass').value;
-            if (pass === "zamirazzo2025") {
-                document.getElementById('loginScreen').classList.add('hidden');
-                document.getElementById('adminPanel').classList.remove('hidden');
-            } else {
-                alert("Senha incorreta!");
-            }
-        }
-
-        function addProduct() {
-            alert("Funcionalidade de adicionar produto em desenvolvimento.");
         }
 
         window.onload = () => {
