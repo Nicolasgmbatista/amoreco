@@ -95,31 +95,43 @@
         <div class="max-w-7xl mx-auto px-6 py-10">
             <h2 class="text-4xl font-bold text-center mb-8">👩‍💼 Painel da Vendedora</h2>
             
-            <!-- Login -->
             <div id="loginScreen">
-                <div class="max-w-md mx-auto bg-white p-8 rounded-3xl shadow">
-                    <input type="password" id="adminPass" placeholder="Senha da Vendedora" 
-                           class="w-full p-5 border-2 border-rose-200 rounded-2xl text-center text-lg mb-6">
-                    <button onclick="loginAdmin()" 
-                            class="w-full bg-rose-700 hover:bg-rose-800 text-white py-5 rounded-2xl text-lg font-medium">
-                        Entrar
-                    </button>
-                </div>
+                <input type="password" id="adminPass" placeholder="Senha" class="w-full max-w-md mx-auto block p-5 border-2 border-rose-200 rounded-2xl text-center">
+                <button onclick="loginAdmin()" class="mt-6 w-full max-w-md mx-auto block bg-rose-700 text-white py-4 rounded-2xl">Entrar</button>
             </div>
 
-            <!-- Painel Principal -->
             <div id="adminPanel" class="hidden">
-                <button onclick="addNewProduct()" 
-                        class="bg-green-600 hover:bg-green-700 text-white px-8 py-4 rounded-2xl mb-8 flex items-center gap-2 mx-auto">
-                    <i class="fas fa-plus"></i> Adicionar Novo Produto
-                </button>
-                
+                <button onclick="openAddProductModal()" class="bg-green-600 text-white px-8 py-4 rounded-2xl mb-8">+ Adicionar Novo Produto</button>
                 <div id="adminProductsList" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
             </div>
         </div>
     </div>
 
+    <!-- Modal para Adicionar / Editar Produto -->
+    <div id="productModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-3xl p-8 w-full max-w-lg mx-4">
+            <h3 id="modalTitle" class="text-2xl font-bold mb-6">Adicionar Novo Produto</h3>
+            <input id="prodName" placeholder="Nome do produto" class="w-full p-4 border rounded-2xl mb-4">
+            <input id="prodPrice" placeholder="Preço (ex: R$ 45,00)" class="w-full p-4 border rounded-2xl mb-4">
+            <select id="prodCategory" class="w-full p-4 border rounded-2xl mb-4">
+                <option value="brincos">Brincos</option>
+                <option value="colares">Colares</option>
+                <option value="pulseiras">Pulseiras</option>
+                <option value="chapeus">Chapéus</option>
+            </select>
+            <input id="prodImage" placeholder="URL da foto" class="w-full p-4 border rounded-2xl mb-4">
+            <textarea id="prodDesc" placeholder="Descrição" class="w-full p-4 border rounded-2xl mb-6 h-24"></textarea>
+            
+            <div class="flex gap-4">
+                <button onclick="closeModal()" class="flex-1 py-4 border rounded-2xl">Cancelar</button>
+                <button onclick="saveProduct()" id="saveBtn" class="flex-1 py-4 bg-rose-700 text-white rounded-2xl">Salvar Produto</button>
+            </div>
+        </div>
+    </div>
+
     <script>
+        let editingIndex = -1;
+
         function showPage(pageId) {
             document.querySelectorAll('.hero, .main-page').forEach(el => el.classList.remove('active'));
             if (pageId === 'inicio') {
@@ -130,10 +142,11 @@
         }
 
         const products = [
-            { id: 1, name: "Brinco Miçanga Colorful", category: "brincos", price: "R$ 45,00", image: "img/brinco1.jpg", description: "Brincos leves e vibrantes" },
-            { id: 2, name: "Colar Longo Boho", category: "colares", price: "R$ 85,00", image: "img/colar1.jpg", description: "Colar longo com miçangas" },
-            { id: 3, name: "Pulseira Ajustável", category: "pulseiras", price: "R$ 35,00", image: "img/pulseira1.jpg", description: "Pulseira delicada" },
-            { id: 4, name: "Chapéu Decorado Boho", category: "chapeus", price: "R$ 120,00", image: "img/chapeu1.jpeg", description: "Chapéu com detalhes" }
+            { name: "Brinco Miçanga Colorful", category: "brincos", price: "R$ 45,00", image: "img/brinco1.jpg", description: "Brincos leves e vibrantes" },
+            { name: "Colar Longo Boho", category: "colares", price: "R$ 85,00", image: "img/colar1.jpg", description: "Colar longo com miçangas" },
+            { name: "Pulseira Ajustável", category: "pulseiras", price: "R$ 35,00", image: "img/pulseira1.jpg", description: "Pulseira delicada" },
+            { name: "Chapéu Decorado Boho", category: "chapeus", price: "R$ 120,00", image: "img/chapeu1.jpeg", description: "Chapéu com detalhes" },
+            { name: "Chapéu Miçanga Floral", category: "chapeus", price: "R$ 135,00", image: "img/chapeu2.jpeg", description: "Modelo exclusivo com flores" }
         ];
 
         function createProductCard(product) {
@@ -155,16 +168,22 @@
             return card;
         }
 
-        function renderProducts() {
+        function renderProducts(filteredProducts) {
             const container = document.getElementById('products-grid');
             container.innerHTML = '';
-            products.forEach(p => container.appendChild(createProductCard(p)));
+            filteredProducts.forEach(p => container.appendChild(createProductCard(p)));
         }
 
-        function filterCategory(cat) {
+        function filterCategory(category) {
             document.querySelectorAll('#loja button').forEach(btn => btn.classList.remove('active-filter'));
-            document.getElementById('btn-' + cat).classList.add('active-filter');
-            renderProducts();
+            document.getElementById('btn-' + category).classList.add('active-filter');
+
+            if (category === 'all') {
+                renderProducts(products);
+            } else {
+                const filtered = products.filter(p => p.category === category);
+                renderProducts(filtered);
+            }
         }
 
         function contactWhatsApp(name) {
@@ -172,76 +191,57 @@
             window.open(`https://wa.me/5549998109578?text=${msg}`, '_blank');
         }
 
-        // ====================== ÁREA DA VENDEDORA ======================
+        // ==================== VENDEDORA ====================
         function loginAdmin() {
             const pass = document.getElementById('adminPass').value;
             if (pass === "zamirazzo2025") {
                 document.getElementById('loginScreen').classList.add('hidden');
                 document.getElementById('adminPanel').classList.remove('hidden');
-                loadAdminProducts();
             } else {
-                alert("Senha incorreta!\nSenha: zamirazzo2025");
+                alert("Senha incorreta! Use: zamirazzo2025");
             }
-        }
-
-        function loadAdminProducts() {
-            const container = document.getElementById('adminProductsList');
-            container.innerHTML = '';
-
-            products.forEach((product, index) => {
-                const div = document.createElement('div');
-                div.className = "border rounded-3xl p-5 bg-white";
-                div.innerHTML = `
-                    <img src="${product.image}" class="w-full h-48 object-cover rounded-2xl">
-                    <h3 class="font-semibold mt-3">${product.name}</h3>
-                    <p class="text-rose-600 font-bold">${product.price}</p>
-                    <div class="flex gap-3 mt-5">
-                        <button onclick="editProduct(${index})" class="flex-1 bg-blue-600 text-white py-3 rounded-2xl">Editar</button>
-                        <button onclick="deleteProduct(${index})" class="flex-1 bg-red-600 text-white py-3 rounded-2xl">Excluir</button>
-                    </div>
-                `;
-                container.appendChild(div);
-            });
         }
 
         function addNewProduct() {
-            const name = prompt("Nome do produto:");
-            if (!name) return;
-            const price = prompt("Preço (ex: R$ 45,00):");
-            const category = prompt("Categoria (brincos, colares, pulseiras, chapeus):");
-            const image = prompt("URL da foto:", "img/brinco1.jpg");
-            const description = prompt("Descrição curta:", "");
+            editingIndex = -1;
+            document.getElementById('modalTitle').textContent = "Adicionar Novo Produto";
+            document.getElementById('saveBtn').textContent = "Salvar Produto";
+            document.getElementById('prodName').value = '';
+            document.getElementById('prodPrice').value = '';
+            document.getElementById('prodCategory').value = 'brincos';
+            document.getElementById('prodImage').value = '';
+            document.getElementById('prodDesc').value = '';
+            document.getElementById('productModal').classList.remove('hidden');
+        }
 
-            products.push({
+        function closeModal() {
+            document.getElementById('productModal').classList.add('hidden');
+        }
+
+        function saveProduct() {
+            const name = document.getElementById('prodName').value;
+            if (!name) return alert("Nome é obrigatório");
+
+            const product = {
                 name: name,
-                price: price,
-                category: category,
-                image: image,
-                description: description
-            });
+                price: document.getElementById('prodPrice').value || "R$ 0,00",
+                category: document.getElementById('prodCategory').value,
+                image: document.getElementById('prodImage').value || "img/default.jpg",
+                description: document.getElementById('prodDesc').value
+            };
 
-            alert("Produto adicionado com sucesso!");
-            loadAdminProducts();
-        }
-
-        function editProduct(index) {
-            const p = products[index];
-            const newName = prompt("Novo nome:", p.name);
-            if (newName) p.name = newName;
-            const newPrice = prompt("Novo preço:", p.price);
-            if (newPrice) p.price = newPrice;
-            loadAdminProducts();
-        }
-
-        function deleteProduct(index) {
-            if (confirm("Deseja realmente excluir este produto?")) {
-                products.splice(index, 1);
-                loadAdminProducts();
+            if (editingIndex >= 0) {
+                products[editingIndex] = product;
+            } else {
+                products.push(product);
             }
+
+            alert("Produto salvo com sucesso!");
+            closeModal();
         }
 
         window.onload = () => {
-            renderProducts();
+            renderProducts(products);
             showPage('inicio');
         };
     </script>
