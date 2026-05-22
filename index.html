@@ -36,7 +36,8 @@
     <header class="bg-white shadow-md sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-5 py-5 flex items-center justify-between">
             <h1 class="text-3xl font-bold text-rose-700">Zamirazzo</h1>
-            <nav class="flex gap-5 md:gap-10 text-base md:text-lg font-medium">
+            
+            <nav class="flex gap-6 md:gap-10 text-base md:text-lg font-medium">
                 <a href="#" onclick="showPage('inicio')" class="hover:text-rose-600">Início</a>
                 <a href="#" onclick="showPage('loja')" class="hover:text-rose-600">Loja</a>
                 <a href="#" onclick="showPage('sobre')" class="hover:text-rose-600">Sobre</a>
@@ -73,7 +74,7 @@
     </div>
 
     <!-- SOBRE -->
-    <div id="sobre" class="main-page bg-white">
+    <div id="sobre" class="page bg-white">
         <div class="max-w-5xl mx-auto px-6 py-20">
             <div class="grid md:grid-cols-2 gap-16 items-center">
                 <div>
@@ -92,7 +93,7 @@
     </div>
 
     <!-- CONTATO -->
-    <div id="contato" class="main-page bg-[#f8e9d8]">
+    <div id="contato" class="page bg-[#f8e9d8]">
         <div class="max-w-7xl mx-auto px-6 py-24 text-center">
             <h2 class="text-4xl md:text-5xl font-bold mb-6 text-rose-800">Ficou interessado?</h2>
             <p class="text-xl text-zinc-700 mb-12">Clique abaixo e vamos conversar sobre sua peça dos sonhos.</p>
@@ -110,13 +111,13 @@
         </div>
     </div>
 
-    <!-- ====================== ÁREA DA VENDEDORA ====================== -->
+    <!-- VENDEDORA -->
     <div id="admin" class="main-page bg-white">
         <div class="max-w-7xl mx-auto px-6 py-10">
             <h2 class="text-4xl font-bold text-center mb-8">👩‍💼 Painel da Vendedora</h2>
             
             <div id="loginScreen">
-                <input type="password" id="adminPass" placeholder="Digite a senha" class="w-full max-w-md mx-auto block p-5 border-2 border-rose-200 rounded-2xl text-center text-lg">
+                <input type="password" id="adminPass" placeholder="Digite a senha" class="w-full max-w-md mx-auto block p-5 border-2 border-rose-200 rounded-2xl text-center">
                 <button onclick="loginAdmin()" class="mt-6 w-full max-w-md mx-auto block bg-rose-700 text-white py-5 rounded-2xl text-lg font-medium">Entrar</button>
             </div>
 
@@ -127,13 +128,13 @@
         </div>
     </div>
 
-    <!-- MODAL ADICIONAR / EDITAR -->
+    <!-- MODAL -->
     <div id="productModal" class="hidden fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
         <div class="bg-white rounded-3xl p-8 w-full max-w-lg mx-4">
             <h3 id="modalTitle" class="text-2xl font-bold mb-6">Adicionar Novo Produto</h3>
             
             <input id="prodName" placeholder="Nome do produto" class="w-full p-4 border rounded-2xl mb-4">
-            <input id="prodPrice" placeholder="Preço" class="w-full p-4 border rounded-2xl mb-4">
+            <input id="prodPrice" placeholder="Preço (ex: R$ 45,00)" class="w-full p-4 border rounded-2xl mb-4">
             <select id="prodCategory" class="w-full p-4 border rounded-2xl mb-4">
                 <option value="brincos">Brincos</option>
                 <option value="colares">Colares</option>
@@ -154,12 +155,8 @@
         let editingIndex = -1;
 
         function showPage(pageId) {
-            document.querySelectorAll('.hero, .main-page').forEach(el => el.classList.remove('active'));
-            if (pageId === 'inicio') {
-                document.getElementById('inicio').classList.add('active');
-            } else {
-                document.getElementById(pageId).classList.add('active');
-            }
+            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
         }
 
         let products = [
@@ -206,7 +203,7 @@
             window.open(`https://wa.me/5549998109578?text=${msg}`, '_blank');
         }
 
-        // ====================== VENDEDORA ======================
+        // VENDEDORA
         function loginAdmin() {
             const pass = document.getElementById('adminPass').value;
             if (pass === "zamirazzo2025") {
@@ -254,8 +251,6 @@
             closeModal();
             renderProducts();
         }
-
-        let editingIndex = -1;
 
         window.onload = () => {
             renderProducts();
