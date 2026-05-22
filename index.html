@@ -21,6 +21,13 @@
             background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)), url('img/banner.jpeg') center/cover;
             height: 100vh;
         }
+
+        .product-card {
+            transition: all 0.4s ease;
+        }
+        .product-card:hover {
+            transform: translateY(-10px);
+        }
     </style>
 </head>
 <body class="bg-[#fdf4f0]">
@@ -29,7 +36,6 @@
     <header class="bg-white shadow-md sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-5 py-5 flex items-center justify-between">
             <h1 class="text-3xl font-bold text-rose-700">Zamirazzo</h1>
-            
             <nav class="flex gap-6 md:gap-10 text-base md:text-lg font-medium">
                 <a href="#" onclick="showPage('inicio')" class="hover:text-rose-600">Início</a>
                 <a href="#" onclick="showPage('loja')" class="hover:text-rose-600">Loja</a>
@@ -40,7 +46,7 @@
         </div>
     </header>
 
-    <!-- BANNER INICIAL -->
+    <!-- BANNER INICIAL (SÓ AQUI) -->
     <div id="inicio" class="page active hero flex items-center text-white">
         <div class="max-w-7xl mx-auto px-6 text-center">
             <h2 class="text-5xl md:text-7xl font-bold mb-6">Artesanal.<br>Único.<br>Seu.</h2>
@@ -104,7 +110,7 @@
         </div>
     </div>
 
-    <!-- VENDEDORA -->
+    <!-- ====================== ÁREA DA VENDEDORA ====================== -->
     <div id="admin" class="main-page bg-white">
         <div class="max-w-7xl mx-auto px-6 py-10">
             <h2 class="text-4xl font-bold text-center mb-8">👩‍💼 Painel da Vendedora</h2>
@@ -121,7 +127,32 @@
         </div>
     </div>
 
+    <!-- MODAL ADICIONAR / EDITAR -->
+    <div id="productModal" class="hidden fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
+        <div class="bg-white rounded-3xl p-8 w-full max-w-lg mx-4">
+            <h3 id="modalTitle" class="text-2xl font-bold mb-6">Adicionar Novo Produto</h3>
+            
+            <input id="prodName" placeholder="Nome do produto" class="w-full p-4 border rounded-2xl mb-4">
+            <input id="prodPrice" placeholder="Preço (ex: R$ 45,00)" class="w-full p-4 border rounded-2xl mb-4">
+            <select id="prodCategory" class="w-full p-4 border rounded-2xl mb-4">
+                <option value="brincos">Brincos</option>
+                <option value="colares">Colares</option>
+                <option value="pulseiras">Pulseiras</option>
+                <option value="chapeus">Chapéus</option>
+            </select>
+            <input id="prodImage" placeholder="URL da foto" class="w-full p-4 border rounded-2xl mb-4">
+            <textarea id="prodDesc" placeholder="Descrição" class="w-full p-4 border rounded-2xl mb-6 h-28"></textarea>
+            
+            <div class="flex gap-4">
+                <button onclick="closeModal()" class="flex-1 py-4 border rounded-2xl">Cancelar</button>
+                <button onclick="saveProduct()" class="flex-1 py-4 bg-rose-700 text-white rounded-2xl">Salvar</button>
+            </div>
+        </div>
+    </div>
+
     <script>
+        let editingIndex = -1;
+
         function showPage(pageId) {
             document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
             document.getElementById(pageId).classList.add('active');
@@ -171,7 +202,7 @@
             window.open(`https://wa.me/5549998109578?text=${msg}`, '_blank');
         }
 
-        // VENDEDORA
+        // ====================== VENDEDORA ======================
         function loginAdmin() {
             const pass = document.getElementById('adminPass').value;
             if (pass === "zamirazzo2025") {
@@ -183,7 +214,41 @@
         }
 
         function openAddModal() {
-            alert("Formulário de adicionar produto em breve.");
+            editingIndex = -1;
+            document.getElementById('modalTitle').textContent = "Adicionar Novo Produto";
+            document.getElementById('prodName').value = '';
+            document.getElementById('prodPrice').value = '';
+            document.getElementById('prodCategory').value = 'brincos';
+            document.getElementById('prodImage').value = '';
+            document.getElementById('prodDesc').value = '';
+            document.getElementById('productModal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('productModal').classList.add('hidden');
+        }
+
+        function saveProduct() {
+            const name = document.getElementById('prodName').value;
+            if (!name) return alert("Nome é obrigatório");
+
+            const product = {
+                name: name,
+                price: document.getElementById('prodPrice').value,
+                category: document.getElementById('prodCategory').value,
+                image: document.getElementById('prodImage').value || "img/default.jpg",
+                description: document.getElementById('prodDesc').value
+            };
+
+            if (editingIndex >= 0) {
+                products[editingIndex] = product;
+            } else {
+                products.push(product);
+            }
+
+            alert("Produto salvo com sucesso!");
+            closeModal();
+            renderProducts();
         }
 
         window.onload = () => {
