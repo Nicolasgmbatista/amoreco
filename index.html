@@ -36,6 +36,7 @@
     <header class="bg-white shadow-md sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-5 py-5 flex items-center justify-between">
             <h1 class="text-3xl font-bold text-rose-700">Zamirazzo</h1>
+            
             <nav class="flex gap-6 md:gap-10 text-base md:text-lg font-medium">
                 <a href="#" onclick="showPage('inicio')" class="hover:text-rose-600">Início</a>
                 <a href="#" onclick="showPage('loja')" class="hover:text-rose-600">Loja</a>
@@ -46,7 +47,7 @@
         </div>
     </header>
 
-    <!-- BANNER INICIAL (SÓ AQUI) -->
+    <!-- BANNER INICIAL -->
     <div id="inicio" class="page active hero flex items-center text-white">
         <div class="max-w-7xl mx-auto px-6 text-center">
             <h2 class="text-5xl md:text-7xl font-bold mb-6">Artesanal.<br>Único.<br>Seu.</h2>
@@ -110,13 +111,13 @@
         </div>
     </div>
 
-    <!-- ====================== ÁREA DA VENDEDORA ====================== -->
+    <!-- ÁREA DA VENDEDORA -->
     <div id="admin" class="main-page bg-white">
         <div class="max-w-7xl mx-auto px-6 py-10">
             <h2 class="text-4xl font-bold text-center mb-8">👩‍💼 Painel da Vendedora</h2>
             
             <div id="loginScreen">
-                <input type="password" id="adminPass" placeholder="Senha" class="w-full max-w-md mx-auto block p-5 border-2 border-rose-200 rounded-2xl text-center">
+                <input type="password" id="adminPass" placeholder="Digite a senha" class="w-full max-w-md mx-auto block p-5 border-2 border-rose-200 rounded-2xl text-center">
                 <button onclick="loginAdmin()" class="mt-6 w-full max-w-md mx-auto block bg-rose-700 text-white py-5 rounded-2xl text-lg font-medium">Entrar</button>
             </div>
 
@@ -250,8 +251,6 @@
             closeModal();
             renderProducts();
         }
-
-        let editingIndex = -1;
 
         window.onload = () => {
             renderProducts();
