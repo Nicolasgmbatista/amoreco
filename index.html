@@ -9,18 +9,12 @@
     
     <style>
         body { font-family: 'Segoe UI', system-ui, sans-serif; }
-        
-        .page {
-            display: none;
-        }
-        .page.active {
-            display: block;
-        }
-        
-        .hero {
-            background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)), url('img/banner.jpeg') center/cover;
-            height: 100vh;
-        }
+        .hero { background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)), url('img/banner.jpeg') center/cover; height: 100vh; display: none; }
+        .hero.active { display: flex; }
+        .main-page { display: none; padding-top: 90px; }
+        .main-page.active { display: block; }
+        .product-card { transition: all 0.4s ease; }
+        .product-card:hover { transform: translateY(-10px); }
     </style>
 </head>
 <body class="bg-[#fdf4f0]">
@@ -29,7 +23,7 @@
     <header class="bg-white shadow-md sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-5 py-5 flex items-center justify-between">
             <h1 class="text-3xl font-bold text-rose-700">Zamirazzo</h1>
-            <nav class="flex gap-6 md:gap-10 text-base md:text-lg font-medium">
+            <nav class="flex gap-5 md:gap-10 text-base md:text-lg font-medium">
                 <a href="#" onclick="showPage('inicio')" class="hover:text-rose-600">Início</a>
                 <a href="#" onclick="showPage('loja')" class="hover:text-rose-600">Loja</a>
                 <a href="#" onclick="showPage('sobre')" class="hover:text-rose-600">Sobre</a>
@@ -39,8 +33,8 @@
         </div>
     </header>
 
-    <!-- INÍCIO (Banner) -->
-    <div id="inicio" class="page active hero flex items-center text-white">
+    <!-- BANNER -->
+    <div id="inicio" class="hero active items-center text-white">
         <div class="max-w-7xl mx-auto px-6 text-center">
             <h2 class="text-5xl md:text-7xl font-bold mb-6">Artesanal.<br>Único.<br>Seu.</h2>
             <p class="text-xl md:text-3xl mb-10">Brincos, colares, pulseiras e chapéus feitos à mão com miçangas e muito amor.</p>
@@ -49,7 +43,7 @@
     </div>
 
     <!-- LOJA -->
-    <div id="loja" class="page">
+    <div id="loja" class="main-page">
         <div class="max-w-7xl mx-auto px-5 py-12">
             <h2 class="text-4xl md:text-5xl font-bold text-center mb-12 text-rose-800">Nossa Coleção</h2>
             
@@ -66,7 +60,7 @@
     </div>
 
     <!-- SOBRE -->
-    <div id="sobre" class="page bg-white">
+    <div id="sobre" class="main-page bg-white">
         <div class="max-w-5xl mx-auto px-6 py-20">
             <div class="grid md:grid-cols-2 gap-16 items-center">
                 <div>
@@ -85,7 +79,7 @@
     </div>
 
     <!-- CONTATO -->
-    <div id="contato" class="page bg-[#f8e9d8]">
+    <div id="contato" class="main-page bg-[#f8e9d8]">
         <div class="max-w-7xl mx-auto px-6 py-24 text-center">
             <h2 class="text-4xl md:text-5xl font-bold mb-6 text-rose-800">Ficou interessado?</h2>
             <p class="text-xl text-zinc-700 mb-12">Clique abaixo e vamos conversar sobre sua peça dos sonhos.</p>
@@ -103,13 +97,13 @@
         </div>
     </div>
 
-    <!-- VENDEDORA -->
+    <!-- ====================== ÁREA DA VENDEDORA ====================== -->
     <div id="admin" class="main-page bg-white">
         <div class="max-w-7xl mx-auto px-6 py-10">
             <h2 class="text-4xl font-bold text-center mb-8">👩‍💼 Painel da Vendedora</h2>
             
             <div id="loginScreen">
-                <input type="password" id="adminPass" placeholder="Senha" class="w-full max-w-md mx-auto block p-5 border-2 border-rose-200 rounded-2xl text-center">
+                <input type="password" id="adminPass" placeholder="Digite a senha" class="w-full max-w-md mx-auto block p-5 border-2 border-rose-200 rounded-2xl text-center text-lg">
                 <button onclick="loginAdmin()" class="mt-6 w-full max-w-md mx-auto block bg-rose-700 text-white py-5 rounded-2xl text-lg font-medium">Entrar</button>
             </div>
 
@@ -120,7 +114,7 @@
         </div>
     </div>
 
-    <!-- MODAL -->
+    <!-- MODAL ADICIONAR / EDITAR -->
     <div id="productModal" class="hidden fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
         <div class="bg-white rounded-3xl p-8 w-full max-w-lg mx-4">
             <h3 id="modalTitle" class="text-2xl font-bold mb-6">Adicionar Novo Produto</h3>
@@ -147,10 +141,12 @@
         let editingIndex = -1;
 
         function showPage(pageId) {
-            document.querySelectorAll('.page').forEach(page => {
-                page.classList.remove('active');
-            });
-            document.getElementById(pageId).classList.add('active');
+            document.querySelectorAll('.hero, .main-page').forEach(el => el.classList.remove('active'));
+            if (pageId === 'inicio') {
+                document.getElementById('inicio').classList.add('active');
+            } else {
+                document.getElementById(pageId).classList.add('active');
+            }
         }
 
         let products = [
@@ -161,7 +157,7 @@
             { name: "Chapéu Miçanga Floral", category: "chapeus", price: "R$ 135,00", image: "img/chapeu2.jpeg", description: "Modelo floral" }
         ];
 
-        function createProductCard(product, index) {
+        function createProductCard(product) {
             const card = document.createElement('div');
             card.className = "product-card bg-white rounded-3xl overflow-hidden border";
             card.innerHTML = `
@@ -203,9 +199,29 @@
             if (pass === "zamirazzo2025") {
                 document.getElementById('loginScreen').classList.add('hidden');
                 document.getElementById('adminPanel').classList.remove('hidden');
+                loadAdminProducts();
             } else {
                 alert("Senha incorreta! Use: zamirazzo2025");
             }
+        }
+
+        function loadAdminProducts() {
+            const container = document.getElementById('adminProductsList');
+            container.innerHTML = '';
+            products.forEach((product, index) => {
+                const div = document.createElement('div');
+                div.className = "border rounded-3xl p-5 bg-white";
+                div.innerHTML = `
+                    <img src="${product.image}" class="w-full h-48 object-cover rounded-2xl">
+                    <h3 class="font-semibold mt-3">${product.name}</h3>
+                    <p class="text-rose-600 font-bold">${product.price}</p>
+                    <div class="flex gap-3 mt-5">
+                        <button onclick="editProduct(${index})" class="flex-1 bg-blue-600 text-white py-3 rounded-2xl">Editar</button>
+                        <button onclick="deleteProduct(${index})" class="flex-1 bg-red-600 text-white py-3 rounded-2xl">Excluir</button>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
         }
 
         function openAddModal() {
@@ -221,6 +237,20 @@
 
         function closeModal() {
             document.getElementById('productModal').classList.add('hidden');
+        }
+
+        let editingIndex = -1;
+
+        function editProduct(index) {
+            editingIndex = index;
+            const p = products[index];
+            document.getElementById('modalTitle').textContent = "Editar Produto";
+            document.getElementById('prodName').value = p.name;
+            document.getElementById('prodPrice').value = p.price;
+            document.getElementById('prodCategory').value = p.category;
+            document.getElementById('prodImage').value = p.image;
+            document.getElementById('prodDesc').value = p.description || "";
+            document.getElementById('productModal').classList.remove('hidden');
         }
 
         function saveProduct() {
@@ -244,6 +274,15 @@
             alert("Produto salvo com sucesso!");
             closeModal();
             renderProducts();
+            loadAdminProducts();
+        }
+
+        function deleteProduct(index) {
+            if (confirm("Tem certeza que deseja excluir este produto?")) {
+                products.splice(index, 1);
+                renderProducts();
+                loadAdminProducts();
+            }
         }
 
         window.onload = () => {
