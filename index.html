@@ -7,130 +7,9 @@
 
 <script src="https://cdn.tailwindcss.com"></script>
 
-<!-- Firebase -->
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyAzRUtxjZey4wQGiApQaJ1xU9DxyJrnzqo",
-  authDomain: "zamirazzo.firebaseapp.com",
-  projectId: "zamirazzo",
-  storageBucket: "zamirazzo.firebasestorage.app",
-  messagingSenderId: "143536414159",
-  appId: "1:143536414159:web:373eed517d649ecd85c6ba"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
-let products = [];
-let editingId = null;
-
-// ================= LOAD =================
-async function loadProducts() {
-  const querySnapshot = await getDocs(collection(db, "produtos"));
-  products = [];
-  querySnapshot.forEach((docu) => {
-    products.push({ id: docu.id, ...docu.data() });
-  });
-  renderProducts();
-  loadAdminProducts();
-}
-
-// ================= SAVE =================
-window.saveProduct = async function() {
-  const name = document.getElementById('prodName').value;
-  if (!name) return alert("Nome obrigatório");
-
-  const product = {
-    name,
-    price: document.getElementById('prodPrice').value,
-    category: document.getElementById('prodCategory').value,
-    image: document.getElementById('prodImage').value || "https://via.placeholder.com/300",
-    description: document.getElementById('prodDesc').value
-  };
-
-  if (editingId) {
-    await updateDoc(doc(db, "produtos", editingId), product);
-  } else {
-    await addDoc(collection(db, "produtos"), product);
-  }
-
-  editingId = null;
-  closeModal();
-  loadProducts();
-};
-
-// ================= DELETE =================
-window.deleteProduct = async function(id) {
-  if (confirm("Excluir?")) {
-    await deleteDoc(doc(db, "produtos", id));
-    loadProducts();
-  }
-};
-
-// ================= EDIT =================
-window.editProduct = function(id) {
-  const p = products.find(p => p.id === id);
-  editingId = id;
-
-  document.getElementById('prodName').value = p.name;
-  document.getElementById('prodPrice').value = p.price;
-  document.getElementById('prodCategory').value = p.category;
-  document.getElementById('prodImage').value = p.image;
-  document.getElementById('prodDesc').value = p.description;
-
-  document.getElementById('productModal').classList.remove('hidden');
-};
-
-// ================= RENDER =================
-function createProductCard(p) {
-  return `
-  <div class="bg-white rounded-2xl overflow-hidden shadow">
-    <img src="${p.image}" class="w-full h-40 object-cover">
-    <div class="p-3">
-      <h3 class="font-bold">${p.name}</h3>
-      <p class="text-sm">${p.description}</p>
-      <p class="text-rose-600 font-bold mt-1">${p.price}</p>
-    </div>
-  </div>`;
-}
-
-function renderProducts() {
-  const grid = document.getElementById("products-grid");
-  grid.innerHTML = products.map(createProductCard).join("");
-}
-
-function loadAdminProducts() {
-  const container = document.getElementById('adminProductsList');
-  container.innerHTML = products.map(p => `
-    <div class="border p-4 rounded-xl">
-      <img src="${p.image}" class="h-32 w-full object-cover rounded">
-      <h3>${p.name}</h3>
-      <div class="flex gap-2 mt-2">
-        <button onclick="editProduct('${p.id}')" class="bg-blue-500 text-white px-2 py-1 rounded">Editar</button>
-        <button onclick="deleteProduct('${p.id}')" class="bg-red-500 text-white px-2 py-1 rounded">Excluir</button>
-      </div>
-    </div>
-  `).join("");
-}
-
-// ================= UI =================
-window.openAddModal = function() {
-  editingId = null;
-  document.getElementById('productModal').classList.remove('hidden');
-};
-
-window.closeModal = function() {
-  document.getElementById('productModal').classList.add('hidden');
-};
-
-// INIT
-window.onload = () => {
-  loadProducts();
-};
-</script>
+<!-- Firebase versão compatível -->
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
 </head>
 
@@ -141,36 +20,134 @@ window.onload = () => {
 
   <div id="products-grid" class="grid grid-cols-2 md:grid-cols-4 gap-4"></div>
 
-  <div class="mt-10">
-    <button onclick="openAddModal()" class="bg-green-600 text-white px-5 py-3 rounded w-full">
-      + Adicionar Produto
-    </button>
-  </div>
+  <button onclick="openModal()" class="mt-6 bg-green-600 text-white px-4 py-2 rounded w-full">
+    + Adicionar Produto
+  </button>
 
-  <div id="adminProductsList" class="mt-6 grid grid-cols-2 gap-4"></div>
+  <div id="adminList" class="mt-6 grid grid-cols-2 gap-4"></div>
 </div>
 
 <!-- MODAL -->
-<div id="productModal" class="hidden fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center">
-  <div class="bg-white p-6 rounded-xl w-full max-w-md">
-    <input id="prodName" placeholder="Nome" class="w-full mb-2 p-2 border">
-    <input id="prodPrice" placeholder="Preço" class="w-full mb-2 p-2 border">
-    <input id="prodImage" placeholder="URL imagem" class="w-full mb-2 p-2 border">
-    <textarea id="prodDesc" placeholder="Descrição" class="w-full mb-2 p-2 border"></textarea>
-
-    <select id="prodCategory" class="w-full mb-2 p-2 border">
-      <option value="brincos">Brincos</option>
-      <option value="colares">Colares</option>
-      <option value="pulseiras">Pulseiras</option>
-      <option value="chapeus">Chapéus</option>
-    </select>
+<div id="modal" class="hidden fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center">
+  <div class="bg-white p-5 rounded w-full max-w-md">
+    <input id="name" placeholder="Nome" class="w-full mb-2 p-2 border">
+    <input id="price" placeholder="Preço" class="w-full mb-2 p-2 border">
+    <input id="image" placeholder="URL imagem" class="w-full mb-2 p-2 border">
+    <textarea id="desc" placeholder="Descrição" class="w-full mb-2 p-2 border"></textarea>
 
     <div class="flex gap-2">
       <button onclick="closeModal()" class="flex-1 border p-2">Cancelar</button>
-      <button onclick="saveProduct()" class="flex-1 bg-rose-600 text-white p-2">Salvar</button>
+      <button onclick="save()" class="flex-1 bg-red-500 text-white p-2">Salvar</button>
     </div>
   </div>
 </div>
+
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyAzRUtxjZey4wQGiApQaJ1xU9DxyJrnzqo",
+  authDomain: "zamirazzo.firebaseapp.com",
+  projectId: "zamirazzo",
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+let editId = null;
+let products = [];
+
+// ===== LOAD =====
+function load() {
+  db.collection("produtos").get().then(snap => {
+    products = [];
+    snap.forEach(doc => {
+      products.push({ id: doc.id, ...doc.data() });
+    });
+    render();
+    renderAdmin();
+  });
+}
+
+// ===== SAVE =====
+function save() {
+  const product = {
+    name: name.value,
+    price: price.value,
+    image: image.value || "https://via.placeholder.com/300",
+    desc: desc.value
+  };
+
+  if (!product.name) return alert("Nome obrigatório");
+
+  if (editId) {
+    db.collection("produtos").doc(editId).update(product);
+  } else {
+    db.collection("produtos").add(product);
+  }
+
+  editId = null;
+  closeModal();
+  setTimeout(load, 500);
+}
+
+// ===== DELETE =====
+function del(id) {
+  if (confirm("Excluir?")) {
+    db.collection("produtos").doc(id).delete().then(load);
+  }
+}
+
+// ===== EDIT =====
+function edit(id) {
+  const p = products.find(x => x.id === id);
+  editId = id;
+
+  name.value = p.name;
+  price.value = p.price;
+  image.value = p.image;
+  desc.value = p.desc;
+
+  openModal();
+}
+
+// ===== RENDER =====
+function render() {
+  productsGrid.innerHTML = products.map(p => `
+    <div class="bg-white rounded shadow">
+      <img src="${p.image}" class="w-full h-40 object-cover">
+      <div class="p-2">
+        <h3 class="font-bold">${p.name}</h3>
+        <p>${p.desc || ""}</p>
+        <p class="text-red-500 font-bold">${p.price || ""}</p>
+      </div>
+    </div>
+  `).join("");
+}
+
+function renderAdmin() {
+  adminList.innerHTML = products.map(p => `
+    <div class="border p-2 rounded">
+      <img src="${p.image}" class="h-24 w-full object-cover">
+      <h3>${p.name}</h3>
+      <div class="flex gap-2 mt-2">
+        <button onclick="edit('${p.id}')" class="bg-blue-500 text-white px-2">Editar</button>
+        <button onclick="del('${p.id}')" class="bg-red-500 text-white px-2">Excluir</button>
+      </div>
+    </div>
+  `).join("");
+}
+
+// ===== UI =====
+function openModal() {
+  modal.classList.remove("hidden");
+}
+
+function closeModal() {
+  modal.classList.add("hidden");
+}
+
+// INIT
+window.onload = load;
+</script>
 
 </body>
 </html>
