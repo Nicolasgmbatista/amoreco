@@ -7,7 +7,6 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
     
-    <!-- Firebase v8 -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
@@ -47,7 +46,6 @@
 <div id="loja" class="main-page">
     <div class="max-w-7xl mx-auto px-5 py-12">
         <h2 class="text-4xl md:text-5xl font-bold text-center mb-12 text-rose-800">Nossa Coleção</h2>
-         
         <div class="flex flex-wrap justify-center gap-3 mb-12">
             <button onclick="filterCategory('all')" id="btn-all" class="active-filter px-8 py-3 rounded-full border font-medium">Todos</button>
             <button onclick="filterCategory('brincos')" id="btn-brincos" class="px-8 py-3 rounded-full border font-medium">Brincos</button>
@@ -81,7 +79,6 @@
     <div class="max-w-7xl mx-auto px-6 py-24 text-center">
         <h2 class="text-4xl md:text-5xl font-bold mb-6 text-rose-800">Ficou interessado?</h2>
         <p class="text-xl text-zinc-700 mb-12">Clique abaixo e vamos conversar sobre sua peça dos sonhos.</p>
-         
         <div class="flex justify-center gap-16">
             <a href="https://wa.me/5549998109578" target="_blank" class="flex flex-col items-center hover:scale-110 transition">
                 <i class="fab fa-whatsapp text-7xl text-green-600"></i>
@@ -98,7 +95,6 @@
 <div id="admin" class="main-page bg-white">
     <div class="max-w-7xl mx-auto px-6 py-10">
         <h2 class="text-4xl font-bold text-center mb-8">👩‍💼 Painel da Vendedora</h2>
-         
         <div id="loginScreen">
             <input type="password" id="adminPass" placeholder="Digite a senha" class="w-full max-w-md mx-auto block p-5 border-2 border-rose-200 rounded-2xl text-center text-lg">
             <button onclick="loginAdmin()" class="mt-6 w-full max-w-md mx-auto block bg-rose-700 text-white py-5 rounded-2xl text-lg font-medium">Entrar</button>
@@ -113,7 +109,6 @@
 <div id="productModal" class="hidden fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
     <div class="bg-white rounded-3xl p-8 w-full max-w-lg mx-4">
         <h3 id="modalTitle" class="text-2xl font-bold mb-6">Adicionar Novo Produto</h3>
-         
         <input id="prodName" placeholder="Nome do produto" class="w-full p-4 border rounded-2xl mb-4">
         <input id="prodPrice" placeholder="Preço (ex: R$ 45,00)" class="w-full p-4 border rounded-2xl mb-4">
         <select id="prodCategory" class="w-full p-4 border rounded-2xl mb-4">
@@ -124,7 +119,7 @@
         </select>
         <input id="prodImage" placeholder="URL da foto" class="w-full p-4 border rounded-2xl mb-4">
         <textarea id="prodDesc" placeholder="Descrição" class="w-full p-4 border rounded-2xl mb-6 h-28"></textarea>
-         
+        
         <div class="flex gap-4">
             <button onclick="closeModal()" class="flex-1 py-4 border rounded-2xl">Cancelar</button>
             <button onclick="saveProduct()" class="flex-1 py-4 bg-rose-700 text-white rounded-2xl">Salvar</button>
@@ -133,15 +128,20 @@
 </div>
 
 <script>
-// ==================== CONFIGURAÇÃO FIREBASE ====================
+// ==================== 🔥 CONFIGURAÇÃO FIREBASE ====================
 const firebaseConfig = {
-    apiKey: "SUA_API_KEY_AQUI",
+    apiKey: "SUA_API_KEY_AQUI",           // ←←← TROQUE AQUI
     authDomain: "SEU-PROJETO.firebaseapp.com",
-    projectId: "SEU-PROJETO",
+    projectId: "SEU-PROJETO",             // ←←← TROQUE AQUI
     storageBucket: "SEU-PROJETO.appspot.com",
     messagingSenderId: "123456789012",
     appId: "1:123456789012:web:xxxxxxxxxxxxxxxx"
 };
+
+// Verifica se o config foi preenchido
+if (firebaseConfig.apiKey.includes("SUA_API_KEY")) {
+    alert("⚠️ Você precisa colocar suas credenciais reais do Firebase!");
+}
 
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
@@ -149,37 +149,35 @@ const db = firebase.firestore();
 let products = [];
 let editingIndex = -1;
 
-// ==================== FUNÇÕES FIREBASE ====================
-async function loadProducts() {
-    try {
-        const snapshot = await db.collection("produtos").get();
-        products = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        renderProducts();
-    } catch (error) {
-        console.error("Erro ao carregar produtos:", error);
-    }
-}
-
+// ==================== FUNÇÕES COM DEBUG ====================
 async function saveProduct() {
+    console.log("🚀 Botão Salvar clicado!");
+
     const name = document.getElementById('prodName').value.trim();
-    if (!name) return alert("Nome é obrigatório");
+    if (!name) {
+        alert("❌ Nome é obrigatório!");
+        return;
+    }
 
     const product = {
         name: name,
-        price: document.getElementById('prodPrice').value,
+        price: document.getElementById('prodPrice').value || "R$ 0,00",
         category: document.getElementById('prodCategory').value,
         image: document.getElementById('prodImage').value || "img/default.jpg",
         description: document.getElementById('prodDesc').value || ""
     };
 
+    console.log("📦 Produto a ser salvo:", product);
+
     try {
         if (editingIndex >= 0) {
             const id = products[editingIndex].id;
+            console.log("✏️ Editando produto ID:", id);
             await db.collection("produtos").doc(id).update(product);
-            products[editingIndex] = { id, ...product };
         } else {
+            console.log("➕ Adicionando novo produto...");
             const docRef = await db.collection("produtos").add(product);
-            products.push({ id: docRef.id, ...product });
+            console.log("✅ Produto criado com ID:", docRef.id);
         }
 
         alert("✅ Produto salvo com sucesso!");
@@ -187,26 +185,35 @@ async function saveProduct() {
         renderProducts();
         loadAdminProducts();
     } catch (error) {
-        console.error("Erro ao salvar:", error);
-        alert("Erro ao salvar produto. Verifique o console (F12)");
+        console.error("❌ ERRO COMPLETO:", error);
+        alert("❌ Erro ao salvar:\n" + error.message + "\n\nAbra o console (F12) para ver mais detalhes.");
+    }
+}
+
+// Outras funções (load, delete, etc.)
+async function loadProducts() {
+    try {
+        const snapshot = await db.collection("produtos").get();
+        products = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        renderProducts();
+    } catch (e) {
+        console.error("Erro loadProducts:", e);
     }
 }
 
 async function deleteProduct(index) {
-    if (!confirm("Tem certeza que deseja excluir este produto?")) return;
+    if (!confirm("Excluir?")) return;
     try {
-        const id = products[index].id;
-        await db.collection("produtos").doc(id).delete();
+        await db.collection("produtos").doc(products[index].id).delete();
         products.splice(index, 1);
         renderProducts();
         loadAdminProducts();
-    } catch (error) {
-        console.error("Erro ao excluir:", error);
-        alert("Erro ao excluir produto.");
+    } catch (e) {
+        console.error(e);
     }
 }
 
-// ==================== FUNÇÕES ORIGINAIS ====================
+// ==================== FUNÇÕES ORIGINAIS (mantidas) ====================
 function showPage(pageId) {
     document.querySelectorAll('.hero, .main-page').forEach(el => el.classList.remove('active'));
     if (pageId === 'inicio') {
@@ -260,7 +267,7 @@ function loginAdmin() {
         document.getElementById('adminPanel').classList.remove('hidden');
         loadAdminProducts();
     } else {
-        alert("Senha incorreta! Use: zamirazzo2025");
+        alert("Senha incorreta!");
     }
 }
 
@@ -310,7 +317,7 @@ function editProduct(index) {
     document.getElementById('productModal').classList.remove('hidden');
 }
 
-// ==================== INICIALIZAÇÃO ====================
+// Inicialização
 window.onload = () => {
     loadProducts();
     showPage('inicio');
