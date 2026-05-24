@@ -134,73 +134,79 @@
 
 <script>
 // ==================== CONFIGURAÇÃO FIREBASE ====================
+// ⚠️ TROQUE ESTES DADOS PELOS SEUS DO FIREBASE CONSOLE
 const firebaseConfig = {
     apiKey: "SUA_API_KEY_AQUI",
     authDomain: "SEU-PROJETO.firebaseapp.com",
     projectId: "SEU-PROJETO",
     storageBucket: "SEU-PROJETO.appspot.com",
     messagingSenderId: "123456789012",
-    appId: "1:123456789012:web:abcdef1234567890"
+    appId: "1:123456789012:web:xxxxxxxxxxxxxxxxxxxx"
 };
 
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
-// ==================== VARIÁVEIS ====================
 let products = [];
 let editingIndex = -1;
 
 // ==================== FUNÇÕES FIREBASE ====================
 async function loadProducts() {
     try {
+        console.log("🔄 Carregando produtos...");
         const snapshot = await db.collection("produtos").get();
         products = [];
         
         snapshot.forEach(doc => {
-            const data = doc.data();
-            products.push({
-                id: doc.id,
-                ...data
-            });
+            products.push({ id: doc.id, ...doc.data() });
         });
 
+        console.log(`✅ ${products.length} produtos carregados`);
         renderProducts();
     } catch (error) {
-        console.error("Erro ao carregar produtos:", error);
+        console.error("❌ Erro ao carregar:", error);
+        alert("Erro ao carregar produtos. Verifique o console (F12)");
     }
 }
 
 async function saveProduct() {
+    console.log("🟡 saveProduct() chamado");
+
     const name = document.getElementById('prodName').value.trim();
-    if (!name) return alert("Nome é obrigatório");
+    if (!name) {
+        alert("Nome é obrigatório");
+        return;
+    }
 
     const product = {
         name: name,
         price: document.getElementById('prodPrice').value,
         category: document.getElementById('prodCategory').value,
         image: document.getElementById('prodImage').value || "img/default.jpg",
-        description: document.getElementById('prodDesc').value
+        description: document.getElementById('prodDesc').value || ""
     };
 
     try {
+        console.log("📤 Salvando produto:", product);
+
         if (editingIndex >= 0) {
-            // EDITAR
             const id = products[editingIndex].id;
             await db.collection("produtos").doc(id).update(product);
             products[editingIndex] = { id, ...product };
+            console.log("✏️ Produto editado");
         } else {
-            // ADICIONAR NOVO
             const docRef = await db.collection("produtos").add(product);
             products.push({ id: docRef.id, ...product });
+            console.log("✅ Produto adicionado com ID:", docRef.id);
         }
 
-        alert("Produto salvo com sucesso!");
+        alert("✅ Produto salvo com sucesso!");
         closeModal();
         renderProducts();
         loadAdminProducts();
     } catch (error) {
-        console.error("Erro ao salvar:", error);
-        alert("Erro ao salvar produto no Firebase.");
+        console.error("❌ Erro ao salvar:", error);
+        alert("Erro ao salvar produto.\n\nVerifique o console (F12)");
     }
 }
 
@@ -210,12 +216,12 @@ async function deleteProduct(index) {
     try {
         const id = products[index].id;
         await db.collection("produtos").doc(id).delete();
-        
         products.splice(index, 1);
         renderProducts();
         loadAdminProducts();
+        alert("Produto excluído com sucesso!");
     } catch (error) {
-        console.error("Erro ao excluir:", error);
+        console.error("❌ Erro ao excluir:", error);
         alert("Erro ao excluir produto.");
     }
 }
@@ -258,9 +264,7 @@ function renderProducts(list = products) {
 function filterCategory(cat) {
     document.querySelectorAll('#loja button').forEach(btn => btn.classList.remove('active-filter'));
     document.getElementById('btn-' + cat).classList.add('active-filter');
-    const filtered = cat === 'all'
-        ? products
-        : products.filter(p => p.category === cat);
+    const filtered = cat === 'all' ? products : products.filter(p => p.category === cat);
     renderProducts(filtered);
 }
 
@@ -328,7 +332,7 @@ function editProduct(index) {
 
 // ==================== INICIALIZAÇÃO ====================
 window.onload = () => {
-    loadProducts();      // Carrega do Firebase
+    loadProducts();
     showPage('inicio');
 };
 </script>
