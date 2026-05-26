@@ -17,6 +17,14 @@
     .main-page.active { display: block; }
     .product-card { transition: all 0.4s ease; }
     .product-card:hover { transform: translateY(-10px); }
+
+    /* Estilo do filtro ativo */
+    .active-filter {
+        background-color: #e11d48 !important;
+        color: white !important;
+        border-color: #e11d48 !important;
+        font-weight: 600;
+    }
 </style>
 </head>
 <body class="bg-[#fdf4f0]">
@@ -65,7 +73,7 @@
                     Cada peça é feita com muito amor. Aceito encomendas personalizadas.
                 </p>
             </div>
-            <img src="img/sobre.jpeg" alt="Criadora" class="rounded-3xl shadow-2xl">
+            <img src="img/sobre.jpg" alt="Criadora" class="rounded-3xl shadow-2xl">
         </div>
     </div>
 </div>
@@ -141,7 +149,6 @@ async function loadProducts() {
     try {
         const snapshot = await db.collection("produtos").get();
         products = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        console.log("📋 Produtos carregados:", products);
         renderProducts();
     } catch (e) {
         console.error("Erro loadProducts:", e);
@@ -149,12 +156,9 @@ async function loadProducts() {
 }
 
 async function saveProduct() {
-    console.log("🚀 Botão Salvar clicado!");
     const name = document.getElementById('prodName').value.trim();
-    if (!name) {
-        alert("❌ Nome é obrigatório!");
-        return;
-    }
+    if (!name) return alert("Nome é obrigatório");
+
     const product = {
         name: name,
         price: document.getElementById('prodPrice').value || "R$ 0,00",
@@ -162,44 +166,50 @@ async function saveProduct() {
         image: document.getElementById('prodImage').value || "img/default.jpg",
         description: document.getElementById('prodDesc').value || ""
     };
-    console.log("📦 Produto a ser salvo:", product);
+
     try {
         if (editingIndex >= 0) {
             const id = products[editingIndex].id;
-            console.log("✏️ Editando produto ID:", id);
             await db.collection("produtos").doc(id).update(product);
+            products[editingIndex] = { id, ...product };
         } else {
-            console.log("➕ Adicionando novo produto...");
             const docRef = await db.collection("produtos").add(product);
-            console.log("✅ Produto criado com ID:", docRef.id);
+            products.push({ id: docRef.id, ...product });
         }
         alert("✅ Produto salvo com sucesso!");
         closeModal();
         renderProducts();
         loadAdminProducts();
     } catch (error) {
-        console.error("❌ ERRO COMPLETO:", error);
-        alert("❌ Erro ao salvar:\n" + error.message);
+        console.error("Erro ao salvar:", error);
+        alert("Erro ao salvar produto.");
     }
 }
 
 async function deleteProduct(index) {
-    if (!confirm("Excluir?")) return;
+    if (!confirm("Tem certeza que deseja excluir este produto?")) return;
     try {
-        await db.collection("produtos").doc(products[index].id).delete();
+        const id = products[index].id;
+        await db.collection("produtos").doc(id).delete();
         products.splice(index, 1);
         renderProducts();
         loadAdminProducts();
-    } catch (e) {
-        console.error(e);
+    } catch (error) {
+        console.error("Erro ao excluir:", error);
+        alert("Erro ao excluir produto.");
     }
 }
 
-// ==================== FILTRO CORRIGIDO ====================
+// ==================== FILTRO COM MARCAÇÃO VISUAL ====================
 function filterCategory(cat) {
+    // Remove a classe de todos os botões
     document.querySelectorAll('#loja button').forEach(btn => btn.classList.remove('active-filter'));
-    document.getElementById('btn-' + cat).classList.add('active-filter');
+    
+    // Ativa o botão clicado
+    const activeBtn = document.getElementById('btn-' + cat);
+    if (activeBtn) activeBtn.classList.add('active-filter');
 
+    // Filtra os produtos
     let filtered;
     if (cat === 'all') {
         filtered = products;
@@ -259,7 +269,7 @@ function loginAdmin() {
         document.getElementById('adminPanel').classList.remove('hidden');
         loadAdminProducts();
     } else {
-        alert("Senha incorreta!");
+        alert("Senha incorreta! Use: zamirazzo2025");
     }
 }
 
@@ -273,7 +283,6 @@ function loadAdminProducts() {
             <img src="${product.image}" class="w-full h-48 object-cover rounded-2xl">
             <h3 class="font-semibold mt-3">${product.name}</h3>
             <p class="text-rose-600 font-bold">${product.price}</p>
-            <p class="text-sm text-gray-500">Categoria: ${product.category || 'Sem categoria'}</p>
             <div class="flex gap-3 mt-5">
                 <button onclick="editProduct(${index})" class="flex-1 bg-blue-600 text-white py-3 rounded-2xl">Editar</button>
                 <button onclick="deleteProduct(${index})" class="flex-1 bg-red-600 text-white py-3 rounded-2xl">Excluir</button>
