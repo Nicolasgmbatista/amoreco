@@ -13,27 +13,20 @@
     body { font-family: 'Segoe UI', system-ui, sans-serif; }
     .hero { background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)), url('img/banner.jpeg') center/cover; height: 100vh; display: none; }
     .hero.active { display: flex; }
-    .main-page { display: none; padding-top: 80px; }
+    .main-page { display: none; padding-top: 75px; }
     .main-page.active { display: block; }
     .product-card { transition: all 0.4s ease; }
     .product-card:hover { transform: translateY(-10px); }
 
-    /* Melhorias fortes para Celular */
+    /* === AJUSTES CELULAR === */
     @media (max-width: 768px) {
-        header .max-w-7xl {
-            padding-left: 15px;
-            padding-right: 15px;
-        }
-        h1 {
-            font-size: 1.75rem;
-            white-space: nowrap;
-        }
-        nav {
-            gap: 10px;
-            font-size: 0.92rem;
-        }
-        .main-page { padding-top: 72px; }
-        #products-grid { grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 14px; }
+        h1 { font-size: 1.55rem !important; }
+        header .max-w-7xl { padding-left: 16px; padding-right: 16px; }
+        nav { gap: 8px; font-size: 0.9rem; }
+        nav a { padding: 4px 6px; }
+        .main-page { padding-top: 68px; }
+        #loja .max-w-7xl { padding-left: 16px; padding-right: 16px; }
+        #products-grid { grid-template-columns: repeat(auto-fit, minmax(158px, 1fr)); gap: 14px; }
     }
 
     .active-filter {
@@ -47,9 +40,9 @@
 <body class="bg-[#fdf4f0]">
 
 <header class="bg-white shadow-md sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-5 py-4 flex items-center justify-between">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
         <h1 class="text-3xl font-bold text-rose-700">Zamirazzo</h1>
-        <nav class="flex items-center gap-3 sm:gap-5 md:gap-8 text-sm sm:text-base font-medium overflow-x-auto whitespace-nowrap">
+        <nav class="flex items-center gap-3 sm:gap-5 md:gap-8 text-sm sm:text-base font-medium whitespace-nowrap overflow-x-auto">
             <a href="#" onclick="showPage('inicio')" class="hover:text-rose-600">Início</a>
             <a href="#" onclick="showPage('loja')" class="hover:text-rose-600">Loja</a>
             <a href="#" onclick="showPage('sobre')" class="hover:text-rose-600">Sobre</a>
@@ -59,7 +52,6 @@
     </div>
 </header>
 
-<!-- O resto do seu código permanece 100% igual -->
 <div id="inicio" class="hero active items-center text-white">
     <div class="max-w-7xl mx-auto px-6 text-center">
         <h2 class="text-5xl md:text-7xl font-bold mb-6">Artesanal.<br>Único.<br>Seu.</h2>
@@ -95,7 +87,7 @@
                     Cada peça é feita com muito amor. Aceito encomendas personalizadas.
                 </p>
             </div>
-            <img src="img/sobre.jpeg" alt="Criadora" class="rounded-3xl shadow-2xl w-full">
+            <img src="img/sobre.jpg" alt="Criadora" class="rounded-3xl shadow-2xl w-full">
         </div>
     </div>
 </div>
@@ -153,6 +145,7 @@
 </div>
 
 <script>
+// (Script mantido exatamente igual ao anterior)
 const firebaseConfig = {
   apiKey: "AIzaSyAzRUtxjZey4wQGiApQaJ1xU9DxyJrnzqo",
   authDomain: "zamirazzo.firebaseapp.com",
@@ -168,7 +161,6 @@ const db = firebase.firestore();
 let products = [];
 let editingIndex = -1;
 
-// ==================== FUNÇÕES (mantidas) ====================
 async function loadProducts() {
     try {
         const snapshot = await db.collection("produtos").get();
