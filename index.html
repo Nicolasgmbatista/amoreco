@@ -9,8 +9,6 @@
   
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-
 <style>
     body { font-family: 'Segoe UI', system-ui, sans-serif; }
     .hero { background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)), url('img/banner.jpeg') center/cover; height: 100vh; display: none; }
@@ -19,6 +17,11 @@
     .main-page.active { display: block; }
     .product-card { transition: all 0.4s ease; }
     .product-card:hover { transform: translateY(-10px); }
+
+    /* Transição suave no filtro */
+    #products-grid {
+        transition: opacity 0.25s ease-in-out;
+    }
 
     @media (max-width: 768px) {
         h1 { font-size: 1.35rem !important; }
@@ -120,13 +123,10 @@
 <div id="admin" class="main-page bg-white">
     <div class="max-w-7xl mx-auto px-6 py-10">
         <h2 class="text-4xl font-bold text-center mb-8">👩‍💼 Painel da Vendedora</h2>
-        
         <div id="loginScreen">
-            <input type="email" id="adminEmail" placeholder="E-mail" class="w-full max-w-md mx-auto block p-5 border-2 border-rose-200 rounded-2xl text-center text-lg mb-4">
-            <input type="password" id="adminPass" placeholder="Senha" class="w-full max-w-md mx-auto block p-5 border-2 border-rose-200 rounded-2xl text-center text-lg">
-            <button onclick="loginWithFirebase()" class="mt-6 w-full max-w-md mx-auto block bg-rose-700 text-white py-5 rounded-2xl text-lg font-medium">Entrar</button>
+            <input type="password" id="adminPass" placeholder="Digite a senha" class="w-full max-w-md mx-auto block p-5 border-2 border-rose-200 rounded-2xl text-center text-lg">
+            <button onclick="loginAdmin()" class="mt-6 w-full max-w-md mx-auto block bg-rose-700 text-white py-5 rounded-2xl text-lg font-medium">Entrar</button>
         </div>
-        
         <div id="adminPanel" class="hidden">
             <button onclick="openAddModal()" class="bg-green-600 hover:bg-green-700 text-white px-8 py-4 rounded-2xl mb-8 w-full">+ Adicionar Novo Produto</button>
             <div id="adminProductsList" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
@@ -156,7 +156,7 @@
 </div>
 
 <script>
-// ==================== FIREBASE ====================
+// ==================== FUNÇÕES FIREBASE ====================
 const firebaseConfig = {
   apiKey: "AIzaSyAzRUtxjZey4wQGiApQaJ1xU9DxyJrnzqo",
   authDomain: "zamirazzo.firebaseapp.com",
@@ -168,39 +168,10 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
-const auth = firebase.auth();
 
 let products = [];
 let editingIndex = -1;
 
-// ==================== LOGIN COM FIREBASE ====================
-function loginWithFirebase() {
-    const email = document.getElementById('adminEmail').value.trim();
-    const password = document.getElementById('adminPass').value;
-
-    if (!email || !password) {
-        alert("Por favor, preencha o e-mail e a senha.");
-        return;
-    }
-
-    auth.signInWithEmailAndPassword(email, password)
-        .then(() => {
-            document.getElementById('loginScreen').classList.add('hidden');
-            document.getElementById('adminPanel').classList.remove('hidden');
-            loadAdminProducts();
-        })
-        .catch((error) => {
-            alert("Erro ao fazer login: " + error.message);
-        });
-}
-
-// ==================== MENU MOBILE ====================
-function toggleMobileMenu() {
-    const menu = document.getElementById('mobileMenu');
-    menu.classList.toggle('hidden');
-}
-
-// ==================== OUTRAS FUNÇÕES (iguais ao original) ====================
 async function loadProducts() {
     try {
         const snapshot = await db.collection("produtos").get();
@@ -253,15 +224,24 @@ async function deleteProduct(index) {
     }
 }
 
+// ==================== FILTRO COM TRANSIÇÃO SUAVE ====================
 function filterCategory(cat) {
+    const grid = document.getElementById('products-grid');
+    grid.style.opacity = '0.4';
+
     document.querySelectorAll('#loja button').forEach(btn => btn.classList.remove('active-filter'));
     document.getElementById('btn-' + cat).classList.add('active-filter');
-    let filtered = cat === 'all' ? products : products.filter(p =>
-        String(p.category || '').toLowerCase().trim() === cat.toLowerCase().trim()
-    );
-    renderProducts(filtered);
+
+    setTimeout(() => {
+        let filtered = cat === 'all' ? products : products.filter(p => 
+            String(p.category || '').toLowerCase().trim() === cat.toLowerCase().trim()
+        );
+        renderProducts(filtered);
+        grid.style.opacity = '1';
+    }, 180);
 }
 
+// ==================== FUNÇÕES ORIGINAIS ====================
 function showPage(pageId) {
     document.querySelectorAll('.hero, .main-page').forEach(el => el.classList.remove('active'));
     if (pageId === 'inicio') {
@@ -299,6 +279,17 @@ function renderProducts(list = products) {
 function contactWhatsApp(name) {
     const msg = encodeURIComponent(`Olá! Fiquei interessada no "${name}" da Zamirazzo. Pode me dar mais informações?`);
     window.open(`https://wa.me/5549998109578?text=${msg}`, '_blank');
+}
+
+function loginAdmin() {
+    const pass = document.getElementById('adminPass').value;
+    if (pass === "zamirazzo2025") {
+        document.getElementById('loginScreen').classList.add('hidden');
+        document.getElementById('adminPanel').classList.remove('hidden');
+        loadAdminProducts();
+    } else {
+        alert("Senha incorreta! Use: zamirazzo2025");
+    }
 }
 
 function loadAdminProducts() {
