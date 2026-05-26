@@ -18,9 +18,9 @@
     .product-card { transition: all 0.4s ease; }
     .product-card:hover { transform: translateY(-10px); }
 
-    /* Transição suave no filtro */
+    /* Transição suave nos filtros */
     #products-grid {
-        transition: opacity 0.25s ease-in-out;
+        transition: opacity 0.3s ease-in-out;
     }
 
     @media (max-width: 768px) {
@@ -49,8 +49,9 @@
             <a href="#" onclick="showPage('sobre')" id="nav-sobre" class="hover:text-rose-600">Sobre</a>
             <a href="#" onclick="showPage('contato')" id="nav-contato" class="hover:text-rose-600">Contato</a>
 
+            <!-- 3 Pontinhos no celular -->
             <div class="sm:hidden relative">
-                <button onclick="toggleMobileMenu()" class="text-2xl text-gray-600 p-1">
+                <button onclick="toggleMobileMenu()" class="text-2xl text-gray-700 p-2">
                     <i class="fas fa-ellipsis-v"></i>
                 </button>
                 <div id="mobileMenu" class="hidden absolute right-0 mt-3 w-52 bg-white rounded-2xl shadow-xl py-2 z-50 border">
@@ -98,7 +99,7 @@
                     Cada peça é feita com muito amor. Aceito encomendas personalizadas.
                 </p>
             </div>
-            <img src="img/sobre.jpeg" alt="Criadora" class="rounded-3xl shadow-2xl">
+            <img src="img/sobre.jpg" alt="Criadora" class="rounded-3xl shadow-2xl">
         </div>
     </div>
 </div>
@@ -156,7 +157,30 @@
 </div>
 
 <script>
-// ==================== FUNÇÕES FIREBASE ====================
+// ==================== MENU MOBILE ====================
+function toggleMobileMenu() {
+    const menu = document.getElementById('mobileMenu');
+    menu.classList.toggle('hidden');
+}
+
+// ==================== FILTRO SUAVE ====================
+function filterCategory(cat) {
+    const grid = document.getElementById('products-grid');
+    grid.style.opacity = '0.3';
+
+    document.querySelectorAll('#loja button').forEach(btn => btn.classList.remove('active-filter'));
+    document.getElementById('btn-' + cat).classList.add('active-filter');
+
+    setTimeout(() => {
+        let filtered = cat === 'all' ? products : products.filter(p => 
+            String(p.category || '').toLowerCase().trim() === cat.toLowerCase().trim()
+        );
+        renderProducts(filtered);
+        grid.style.opacity = '1';
+    }, 200);
+}
+
+// ==================== FIREBASE ====================
 const firebaseConfig = {
   apiKey: "AIzaSyAzRUtxjZey4wQGiApQaJ1xU9DxyJrnzqo",
   authDomain: "zamirazzo.firebaseapp.com",
@@ -224,24 +248,6 @@ async function deleteProduct(index) {
     }
 }
 
-// ==================== FILTRO COM TRANSIÇÃO SUAVE ====================
-function filterCategory(cat) {
-    const grid = document.getElementById('products-grid');
-    grid.style.opacity = '0.4';
-
-    document.querySelectorAll('#loja button').forEach(btn => btn.classList.remove('active-filter'));
-    document.getElementById('btn-' + cat).classList.add('active-filter');
-
-    setTimeout(() => {
-        let filtered = cat === 'all' ? products : products.filter(p => 
-            String(p.category || '').toLowerCase().trim() === cat.toLowerCase().trim()
-        );
-        renderProducts(filtered);
-        grid.style.opacity = '1';
-    }, 180);
-}
-
-// ==================== FUNÇÕES ORIGINAIS ====================
 function showPage(pageId) {
     document.querySelectorAll('.hero, .main-page').forEach(el => el.classList.remove('active'));
     if (pageId === 'inicio') {
