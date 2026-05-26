@@ -118,8 +118,9 @@
         </div>
     </div>
 </div>
+
 <script>
-// ==================== 🔥 CONFIGURAÇÃO FIREBASE ====================
+// ==================== CONFIGURAÇÃO FIREBASE ====================
 const firebaseConfig = {
   apiKey: "AIzaSyAzRUtxjZey4wQGiApQaJ1xU9DxyJrnzqo",
   authDomain: "zamirazzo.firebaseapp.com",
@@ -136,6 +137,17 @@ let products = [];
 let editingIndex = -1;
 
 // ==================== FUNÇÕES FIREBASE ====================
+async function loadProducts() {
+    try {
+        const snapshot = await db.collection("produtos").get();
+        products = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        console.log("📋 Produtos carregados:", products);
+        renderProducts();
+    } catch (e) {
+        console.error("Erro loadProducts:", e);
+    }
+}
+
 async function saveProduct() {
     console.log("🚀 Botão Salvar clicado!");
     const name = document.getElementById('prodName').value.trim();
@@ -171,17 +183,6 @@ async function saveProduct() {
     }
 }
 
-async function loadProducts() {
-    try {
-        const snapshot = await db.collection("produtos").get();
-        products = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        console.log("📋 Produtos carregados:", products); // Debug
-        renderProducts();
-    } catch (e) {
-        console.error("Erro loadProducts:", e);
-    }
-}
-
 async function deleteProduct(index) {
     if (!confirm("Excluir?")) return;
     try {
@@ -205,7 +206,6 @@ function filterCategory(cat) {
     } else {
         filtered = products.filter(p => {
             if (!p.category) return false;
-            // Filtro mais inteligente (ignora maiúsculas/minúsculas e espaços)
             return String(p.category).toLowerCase().trim() === cat.toLowerCase().trim();
         });
     }
@@ -273,6 +273,7 @@ function loadAdminProducts() {
             <img src="${product.image}" class="w-full h-48 object-cover rounded-2xl">
             <h3 class="font-semibold mt-3">${product.name}</h3>
             <p class="text-rose-600 font-bold">${product.price}</p>
+            <p class="text-sm text-gray-500">Categoria: ${product.category || 'Sem categoria'}</p>
             <div class="flex gap-3 mt-5">
                 <button onclick="editProduct(${index})" class="flex-1 bg-blue-600 text-white py-3 rounded-2xl">Editar</button>
                 <button onclick="deleteProduct(${index})" class="flex-1 bg-red-600 text-white py-3 rounded-2xl">Excluir</button>
