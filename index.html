@@ -23,10 +23,9 @@
         h1 { font-size: 1.4rem !important; }
         header .max-w-7xl { padding-left: 15px; padding-right: 15px; }
         .main-page { padding-top: 64px; }
-        #products-grid { grid-template-columns: repeat(auto-fit, minmax(158px, 1fr)); gap: 14px; }
     }
 
-    .active-filter {
+    .active-filter, .nav-active {
         background-color: #e11d48 !important;
         color: white !important;
         border-color: #e11d48 !important;
@@ -40,33 +39,28 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
         <h1 class="text-3xl font-bold text-rose-700">Zamirazzo</h1>
         
-        <nav class="flex items-center gap-4 sm:gap-6 md:gap-10 text-sm sm:text-base font-medium">
-            <!-- Links visíveis no desktop -->
-            <a href="#" onclick="showPage('inicio')" class="hover:text-rose-600 hidden sm:block">Início</a>
-            <a href="#" onclick="showPage('loja')" class="hover:text-rose-600 hidden sm:block">Loja</a>
-            <a href="#" onclick="showPage('sobre')" class="hover:text-rose-600 hidden sm:block">Sobre</a>
-            <a href="#" onclick="showPage('contato')" class="hover:text-rose-600 hidden sm:block">Contato</a>
-            
-            <!-- Menu 3 pontinhos no celular -->
+        <nav class="flex items-center gap-5 sm:gap-8 text-sm sm:text-base font-medium">
+            <!-- Desktop Navigation -->
+            <a href="#" onclick="showPage('inicio')" id="nav-inicio" class="hover:text-rose-600 hidden sm:block">Início</a>
+            <a href="#" onclick="showPage('loja')" id="nav-loja" class="hover:text-rose-600 hidden sm:block">Loja</a>
+            <a href="#" onclick="showPage('sobre')" id="nav-sobre" class="hover:text-rose-600 hidden sm:block">Sobre</a>
+            <a href="#" onclick="showPage('contato')" id="nav-contato" class="hover:text-rose-600 hidden sm:block">Contato</a>
+            <a href="#" onclick="showPage('admin')" id="nav-admin" class="text-rose-600 font-bold hidden sm:block">Vendedora</a>
+
+            <!-- Mobile Menu (apenas Vendedora) -->
             <div class="sm:hidden relative">
                 <button onclick="toggleMobileMenu()" class="text-3xl text-rose-700 p-1">
                     <i class="fas fa-ellipsis-v"></i>
                 </button>
-                <div id="mobileMenu" class="hidden absolute right-0 mt-3 w-48 bg-white rounded-2xl shadow-xl py-2 z-50 border">
-                    <a href="#" onclick="showPage('inicio');toggleMobileMenu()" class="block px-6 py-3 hover:bg-gray-100">Início</a>
-                    <a href="#" onclick="showPage('loja');toggleMobileMenu()" class="block px-6 py-3 hover:bg-gray-100">Loja</a>
-                    <a href="#" onclick="showPage('sobre');toggleMobileMenu()" class="block px-6 py-3 hover:bg-gray-100">Sobre</a>
-                    <a href="#" onclick="showPage('contato');toggleMobileMenu()" class="block px-6 py-3 hover:bg-gray-100">Contato</a>
-                    <a href="#" onclick="showPage('admin');toggleMobileMenu()" class="block px-6 py-3 text-rose-600 font-bold border-t">Vendedora</a>
+                <div id="mobileMenu" class="hidden absolute right-0 mt-3 w-52 bg-white rounded-2xl shadow-xl py-2 z-50 border">
+                    <a href="#" onclick="showPage('admin');toggleMobileMenu()" class="block px-6 py-3 text-rose-600 font-bold hover:bg-gray-100">Vendedora</a>
                 </div>
             </div>
-
-            <!-- Vendedora no desktop -->
-            <a href="#" onclick="showPage('admin')" class="text-rose-600 font-bold hidden sm:block">Vendedora</a>
         </nav>
     </div>
 </header>
 
+<!-- O resto permanece igual ao seu original -->
 <div id="inicio" class="hero active items-center text-white">
     <div class="max-w-7xl mx-auto px-6 text-center">
         <h2 class="text-5xl md:text-7xl font-bold mb-6">Artesanal.<br>Único.<br>Seu.</h2>
@@ -102,7 +96,7 @@
                     Cada peça é feita com muito amor. Aceito encomendas personalizadas.
                 </p>
             </div>
-            <img src="img/sobre.jpeg" alt="Criadora" class="rounded-3xl shadow-2xl">
+            <img src="img/sobre.jpg" alt="Criadora" class="rounded-3xl shadow-2xl">
         </div>
     </div>
 </div>
@@ -166,7 +160,14 @@ function toggleMobileMenu() {
     menu.classList.toggle('hidden');
 }
 
-// ==================== FIREBASE ====================
+// ==================== MARCAÇÃO DA SEÇÃO ATIVA ====================
+function highlightCurrentPage(pageId) {
+    document.querySelectorAll('nav a').forEach(link => link.classList.remove('nav-active'));
+    const activeLink = document.getElementById('nav-' + pageId);
+    if (activeLink) activeLink.classList.add('nav-active');
+}
+
+// ==================== FIREBASE E OUTRAS FUNÇÕES ====================
 const firebaseConfig = {
   apiKey: "AIzaSyAzRUtxjZey4wQGiApQaJ1xU9DxyJrnzqo",
   authDomain: "zamirazzo.firebaseapp.com",
@@ -253,6 +254,7 @@ function showPage(pageId) {
     } else {
         document.getElementById(pageId).classList.add('active');
     }
+    highlightCurrentPage(pageId);
 }
 
 function createProductCard(product) {
