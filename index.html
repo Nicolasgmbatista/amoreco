@@ -23,6 +23,7 @@
         h1 { font-size: 1.4rem !important; }
         header .max-w-7xl { padding-left: 15px; padding-right: 15px; }
         .main-page { padding-top: 64px; }
+        nav a { font-size: 0.95rem; }
     }
 
     /* Marcador suave */
@@ -34,7 +35,7 @@
     .nav-active:after {
         content: '';
         position: absolute;
-        bottom: -2px;
+        bottom: -3px;
         left: 0;
         width: 100%;
         height: 2px;
@@ -48,32 +49,30 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
         <h1 class="text-3xl font-bold text-rose-700">Zamirazzo</h1>
         
-        <nav class="flex items-center gap-5 sm:gap-8 text-sm sm:text-base font-medium">
-            <!-- Desktop -->
-            <a href="#" onclick="showPage('inicio')" id="nav-inicio" class="hover:text-rose-600 hidden sm:block">Início</a>
-            <a href="#" onclick="showPage('loja')" id="nav-loja" class="hover:text-rose-600 hidden sm:block">Loja</a>
-            <a href="#" onclick="showPage('sobre')" id="nav-sobre" class="hover:text-rose-600 hidden sm:block">Sobre</a>
-            <a href="#" onclick="showPage('contato')" id="nav-contato" class="hover:text-rose-600 hidden sm:block">Contato</a>
-            <a href="#" onclick="showPage('admin')" id="nav-admin" class="text-rose-600 font-bold hidden sm:block">Vendedora</a>
+        <nav class="flex items-center gap-4 sm:gap-6 md:gap-8 text-sm sm:text-base font-medium">
+            <!-- Seções normais (visíveis no celular) -->
+            <a href="#" onclick="showPage('inicio')" id="nav-inicio" class="hover:text-rose-600">Início</a>
+            <a href="#" onclick="showPage('loja')" id="nav-loja" class="hover:text-rose-600">Loja</a>
+            <a href="#" onclick="showPage('sobre')" id="nav-sobre" class="hover:text-rose-600">Sobre</a>
+            <a href="#" onclick="showPage('contato')" id="nav-contato" class="hover:text-rose-600">Contato</a>
 
-            <!-- Mobile Menu -->
+            <!-- Menu 3 pontinhos no celular -->
             <div class="sm:hidden relative">
                 <button onclick="toggleMobileMenu()" class="text-3xl text-rose-700 p-1">
                     <i class="fas fa-ellipsis-v"></i>
                 </button>
                 <div id="mobileMenu" class="hidden absolute right-0 mt-3 w-52 bg-white rounded-2xl shadow-xl py-2 z-50 border">
-                    <a href="#" onclick="showPage('inicio');toggleMobileMenu()" class="block px-6 py-3 hover:bg-gray-100">Início</a>
-                    <a href="#" onclick="showPage('loja');toggleMobileMenu()" class="block px-6 py-3 hover:bg-gray-100">Loja</a>
-                    <a href="#" onclick="showPage('sobre');toggleMobileMenu()" class="block px-6 py-3 hover:bg-gray-100">Sobre</a>
-                    <a href="#" onclick="showPage('contato');toggleMobileMenu()" class="block px-6 py-3 hover:bg-gray-100">Contato</a>
-                    <a href="#" onclick="showPage('admin');toggleMobileMenu()" class="block px-6 py-3 text-rose-600 font-bold border-t">Vendedora</a>
+                    <a href="#" onclick="showPage('admin');toggleMobileMenu()" class="block px-6 py-3 text-rose-600 font-bold hover:bg-gray-100">Vendedora</a>
                 </div>
             </div>
+
+            <!-- Vendedora no desktop -->
+            <a href="#" onclick="showPage('admin')" id="nav-admin" class="text-rose-600 font-bold hidden sm:block">Vendedora</a>
         </nav>
     </div>
 </header>
 
-<!-- Restante do site igual -->
+<!-- Restante do site igual ao seu original -->
 <div id="inicio" class="hero active items-center text-white">
     <div class="max-w-7xl mx-auto px-6 text-center">
         <h2 class="text-5xl md:text-7xl font-bold mb-6">Artesanal.<br>Único.<br>Seu.</h2>
@@ -270,7 +269,6 @@ function showPage(pageId) {
     highlightCurrentPage(pageId);
 }
 
-// ... (resto das funções iguais)
 function createProductCard(product) {
     const card = document.createElement('div');
     card.className = "product-card bg-white rounded-3xl overflow-hidden border";
